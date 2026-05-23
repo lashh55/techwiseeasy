@@ -1,0 +1,74 @@
+{
+  "name": "UserProgress",
+  "type": "object",
+  "properties": {
+    "display_name": {
+      "type": "string",
+      "description": "What Sage calls the user"
+    },
+    "language": {
+      "type": "string",
+      "enum": [
+        "en",
+        "es"
+      ],
+      "default": "en"
+    },
+    "device_type": {
+      "type": "string",
+      "enum": [
+        "iphone",
+        "android_phone",
+        "ipad",
+        "android_tablet"
+      ],
+      "default": "iphone"
+    },
+    "text_size": {
+      "type": "string",
+      "enum": [
+        "standard",
+        "large",
+        "extra_large"
+      ],
+      "default": "large"
+    },
+    "audio_narration": {
+      "type": "boolean",
+      "default": true
+    },
+    "sound_effects": {
+      "type": "boolean",
+      "default": true
+    },
+    "high_contrast": {
+      "type": "boolean",
+      "default": false
+    },
+    "avatar_id": {
+      "type": "string",
+      "default": ""
+    },
+    "onboarding_complete": {
+      "type": "boolean",
+      "default": false
+    },
+    "wisdom_points": {
+      "type": "number",
+      "default": 0
+    },
+    "current_streak": {
+      "type": "number",
+      "default": 0
+    },
+    "last_played_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "tutorial_complete": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "required": []
+}
