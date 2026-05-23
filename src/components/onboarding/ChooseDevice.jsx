@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useLanguage } from '@/lib/i18n';
-import { Smartphone, Tablet } from 'lucide-react';
+import { IMAGES } from '@/lib/images';
 
 const devices = [
-  { id: 'iphone', icon: Smartphone, emoji: '📱' },
-  { id: 'android_phone', icon: Smartphone, emoji: '🤖' },
-  { id: 'ipad', icon: Tablet, emoji: '📱' },
-  { id: 'android_tablet', icon: Tablet, emoji: '📟' },
+  { id: 'iphone', image: IMAGES.device_iphone },
+  { id: 'android_phone', image: IMAGES.device_android_phone },
+  { id: 'ipad', image: IMAGES.device_ipad },
+  { id: 'android_tablet', image: IMAGES.device_android_tablet },
 ];
 
 export default function ChooseDevice({ onNext, value, onChange }) {
@@ -44,14 +44,18 @@ export default function ChooseDevice({ onNext, value, onChange }) {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: i * 0.1 }}
             onClick={() => handleSelect(device.id)}
-            className={`flex flex-col items-center gap-3 p-5 rounded-2xl border-3 transition-all min-h-[120px] justify-center ${
+            className={`flex flex-col items-center rounded-2xl border-3 transition-all overflow-hidden min-h-[140px] justify-center ${
               selected === device.id
-                ? 'bg-gold/20 border-gold text-white shadow-lg'
-                : 'bg-white/10 border-white/20 text-white/80 hover:bg-white/15'
+                ? 'border-gold shadow-lg scale-105'
+                : 'border-white/20 hover:border-white/40'
             }`}
           >
-            <span className="text-4xl">{device.emoji}</span>
-            <span className="text-lg font-bold">{labelMap[device.id]}</span>
+            <img src={device.image} alt={labelMap[device.id]} className="w-full h-28 object-cover" />
+            <div className={`w-full py-2 text-center text-base font-bold ${
+              selected === device.id ? 'bg-gold text-navy' : 'bg-white/10 text-white'
+            }`}>
+              {labelMap[device.id]}
+            </div>
           </motion.button>
         ))}
       </div>

@@ -33,7 +33,7 @@ export default function Home() {
   const displayName = progress?.display_name || 'Friend';
 
   const games = [
-    { key: 'spot_the_scam', image: IMAGES.spot_the_scam, label: t('play_spot_the_scam'), color: 'from-red-500 to-orange-500', path: '/home' },
+    { key: 'spot_the_scam', image: IMAGES.spot_the_scam, label: t('play_spot_the_scam'), color: 'from-red-500 to-orange-500', path: '/spot-the-scam' },
     { key: 'password_power', image: IMAGES.password_power, label: t('play_password_power'), color: 'from-blue-500 to-cyan-500', path: '/home' },
     { key: 'app_navigator', image: IMAGES.app_navigator, label: t('play_app_navigator'), color: 'from-green-500 to-emerald-500', path: '/home' },
     { key: 'myth_vs_fact', image: IMAGES.myth_vs_fact, label: t('play_myth_vs_fact'), color: 'from-purple-500 to-violet-500', path: '/home' },

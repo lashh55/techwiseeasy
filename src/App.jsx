@@ -9,6 +9,7 @@ import Welcome from '@/pages/Welcome';
 import Onboarding from '@/pages/Onboarding';
 import Home from '@/pages/Home';
 import Tutorial from '@/pages/Tutorial';
+import SpotTheScam from '@/pages/SpotTheScam';
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
             <Route path="/onboarding" element={<Onboarding />} />
             <Route path="/home" element={<Home />} />
             <Route path="/tutorial" element={<Tutorial />} />
+            <Route path="/spot-the-scam" element={<SpotTheScam />} />
             <Route path="*" element={<PageNotFound />} />
           </Routes>
         </Router>
