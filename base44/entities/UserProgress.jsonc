@@ -53,6 +53,10 @@
       "type": "boolean",
       "default": false
     },
+    "tutorial_complete": {
+      "type": "boolean",
+      "default": false
+    },
     "wisdom_points": {
       "type": "number",
       "default": 0
@@ -65,9 +69,13 @@
       "type": "string",
       "format": "date"
     },
-    "tutorial_complete": {
-      "type": "boolean",
-      "default": false
+    "earned_badges": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": [],
+      "description": "List of earned milestone badge IDs"
     }
   },
   "required": []

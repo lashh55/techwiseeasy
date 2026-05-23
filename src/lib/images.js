@@ -2,8 +2,8 @@
 // Mapped from the 14 provided branded images
 
 export const IMAGES = {
-  // Sage — full body, pointing up, holding tablet
-  sage_full: "https://media.base44.com/images/public/user_6a06132475edeeee429698b5/e18311e43_image.png",
+  // Sage — full body, pointing up, holding tablet (transparent version)
+  sage_full: "https://media.base44.com/images/public/6a113495993631ff5c6292e3/e3aed1963_SageTechWise.png",
   
   // Game mode cards
   spot_the_scam: "https://media.base44.com/images/public/user_6a06132475edeeee429698b5/e1fe7d321_image.png",
