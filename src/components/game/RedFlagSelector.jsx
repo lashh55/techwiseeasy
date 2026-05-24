@@ -100,15 +100,26 @@ export default function RedFlagSelector({ redFlags, distractor, sageExplanation,
         ))}
       </div>
 
-      {!confirmed && selected.length > 0 && (
-        <motion.button
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          onClick={handleConfirm}
-          className="w-full py-4 bg-gold text-navy font-black text-lg rounded-2xl shadow-lg hover:bg-yellow-400 active:scale-[0.98] transition-all"
-        >
-          {lang === 'es' ? 'CONFIRMAR →' : 'CONFIRM →'}
-        </motion.button>
+      {!confirmed && (
+        <>
+          {selected.length === 0 && (
+            <p className="text-white/60 text-sm font-bold text-center">
+              {lang === 'es' ? 'Toca al menos una opción para continuar' : 'Tap at least one option to continue'}
+            </p>
+          )}
+          <motion.button
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            onClick={() => { if (selected.length > 0) handleConfirm(); }}
+            className={`w-full py-4 font-black text-lg rounded-2xl shadow-lg transition-all ${
+              selected.length > 0
+                ? 'bg-gold text-navy hover:bg-yellow-400 active:scale-[0.98]'
+                : 'bg-white/20 text-white/40 cursor-not-allowed'
+            }`}
+          >
+            {lang === 'es' ? 'CONFIRMAR →' : 'CONFIRM →'}
+          </motion.button>
+        </>
       )}
 
       {confirmed && (

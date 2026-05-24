@@ -19,9 +19,12 @@ const avatars = [
 ];
 
 export default function AvatarSelection({ onNext, avatarValue, nameValue, onAvatarChange, onNameChange }) {
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
   const [selectedAvatar, setSelectedAvatar] = useState(avatarValue || 'a1');
   const [name, setName] = useState(nameValue || '');
+  const [showPrompt, setShowPrompt] = useState(false);
+
+  const canProceed = name.trim().length >= 2;
 
   const handleAvatarSelect = (id) => {
     setSelectedAvatar(id);
@@ -79,14 +82,28 @@ export default function AvatarSelection({ onNext, avatarValue, nameValue, onAvat
           placeholder={t('avatar_name_placeholder')}
           className="w-full px-5 py-4 rounded-2xl bg-white/10 border-2 border-white/20 text-white text-xl font-semibold placeholder:text-white/50 focus:outline-none focus:border-gold transition-all min-h-[64px]"
         />
+        {showPrompt && !canProceed && (
+          <p className="text-yellow-300 text-sm font-bold text-center mt-2">
+            {lang === 'es'
+              ? '¡Por favor dile tu nombre a Sage para que pueda saludarte personalmente!'
+              : 'Please tell Sage your name so she can greet you personally!'}
+          </p>
+        )}
       </motion.div>
 
       <motion.button
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.4 }}
-        onClick={onNext}
-        className="w-full max-w-sm py-5 bg-gold text-navy font-black text-xl rounded-2xl shadow-lg mt-4 hover:bg-yellow-400 active:scale-[0.98] transition-all min-h-[68px]"
+        onClick={() => {
+          if (!canProceed) { setShowPrompt(true); return; }
+          onNext();
+        }}
+        className={`w-full max-w-sm py-5 font-black text-xl rounded-2xl shadow-lg mt-4 transition-all min-h-[68px] ${
+          canProceed
+            ? 'bg-gold text-navy hover:bg-yellow-400 active:scale-[0.98]'
+            : 'bg-white/20 text-white/40 cursor-not-allowed'
+        }`}
       >
         {t('this_is_me')}
       </motion.button>
