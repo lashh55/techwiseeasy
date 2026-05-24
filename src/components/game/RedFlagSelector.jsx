@@ -1,54 +1,74 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { useLanguage } from '@/lib/i18n';
 import { IMAGES } from '@/lib/images';
 
-// All defined red flags are correct answers.
-// onContinue(pointsEarned, maxPoints) — called with how many points the user earned.
-export default function RedFlagSelector({ redFlags, sageExplanation, onContinue }) {
+// redFlags: { en: [...], es: [...] }  — all correct answers
+// distractor: { en: string, es: string } | null — one wrong item, shuffled in
+// onContinue(pointsEarned, maxPoints) — scoring: +5 correct, -3 wrong distractor, +10 bonus
+export default function RedFlagSelector({ redFlags, distractor, sageExplanation, onContinue }) {
   const { lang } = useLanguage();
   const [selected, setSelected] = useState([]);
   const [confirmed, setConfirmed] = useState(false);
 
   const flags = redFlags[lang] || redFlags.en;
+  const distractorText = distractor ? (distractor[lang] || distractor.en) : null;
   const explanation = sageExplanation[lang] || sageExplanation.en;
-  const totalFlags = flags.length;
 
-  const toggleFlag = (i) => {
+  // Build shuffled item list: each item has { text, isCorrect, originalIndex }
+  const items = useMemo(() => {
+    const correctItems = flags.map((text, i) => ({ text, isCorrect: true, id: `c${i}` }));
+    if (distractorText) {
+      // Insert distractor at a stable random-ish position (middle-ish)
+      const insertAt = Math.floor(correctItems.length / 2);
+      correctItems.splice(insertAt, 0, { text: distractorText, isCorrect: false, id: 'distractor' });
+    }
+    return correctItems;
+  }, [flags, distractorText]);
+
+  const toggleItem = (id) => {
     if (confirmed) return;
-    setSelected(prev => prev.includes(i) ? prev.filter(x => x !== i) : [...prev, i]);
+    setSelected(prev => prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id]);
   };
 
   const handleConfirm = () => setConfirmed(true);
 
-  // All flags are correct answers — every selected one is correct, every unselected one is missed
-  const getStyle = (i) => {
+  const getStyle = (item) => {
     if (!confirmed) {
-      return selected.includes(i)
+      return selected.includes(item.id)
         ? 'bg-white/20 border-white/60 text-white'
         : 'bg-white/10 border-white/20 text-white/80 hover:bg-white/15';
     }
-    if (selected.includes(i)) {
-      // Correctly selected → green
-      return 'bg-green-500/20 border-green-400 text-white';
+    if (item.isCorrect) {
+      return selected.includes(item.id)
+        ? 'bg-green-500/20 border-green-400 text-white'       // correctly selected
+        : 'bg-yellow-500/10 border-yellow-400 text-white/90'; // missed
     }
-    // Not selected but correct → gold border "missed"
-    return 'bg-yellow-500/10 border-yellow-400 text-white/90';
+    // Distractor
+    return selected.includes(item.id)
+      ? 'bg-red-500/20 border-red-400 text-white'  // wrongly selected
+      : 'bg-white/5 border-white/10 text-white/50'; // not selected — fade out
   };
 
-  const getIcon = (i) => {
-    if (!confirmed) {
-      return selected.includes(i) ? '🚩' : '◻️';
+  const getIcon = (item) => {
+    if (!confirmed) return selected.includes(item.id) ? '🚩' : '◻️';
+    if (item.isCorrect) {
+      return selected.includes(item.id) ? '✅' : '👆';
     }
-    if (selected.includes(i)) return '✅';
-    return '👆'; // missed
+    // Distractor
+    return selected.includes(item.id) ? '❌' : '◻️';
   };
 
   const missedLabel = lang === 'es' ? 'Perdiste este' : 'You missed this one';
+  const wrongLabel = lang === 'es' ? 'Esto no es una señal de alerta (-3 pts)' : 'This is not a red flag (-3 pts)';
 
-  const pointsPerFlag = 5; // 5 pts per correct red flag selected
-  const pointsEarned = selected.length * pointsPerFlag;
-  const maxPoints = totalFlags * pointsPerFlag;
+  // Scoring
+  const correctCount = items.filter(it => it.isCorrect && selected.includes(it.id)).length;
+  const wrongCount = items.filter(it => !it.isCorrect && selected.includes(it.id)).length;
+  const totalCorrectFlags = items.filter(it => it.isCorrect).length;
+  const bonusPoints = 10;
+  const pointsEarned = Math.max(0, correctCount * 5 - wrongCount * 3) + bonusPoints;
+  const maxPoints = totalCorrectFlags * 5 + bonusPoints;
 
   return (
     <div className="flex flex-col gap-4 w-full max-w-sm mx-auto">
@@ -57,20 +77,23 @@ export default function RedFlagSelector({ redFlags, sageExplanation, onContinue 
       </p>
 
       <div className="flex flex-col gap-3">
-        {flags.map((flag, i) => (
+        {items.map((item, i) => (
           <motion.button
-            key={i}
+            key={item.id}
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: i * 0.1 }}
-            onClick={() => toggleFlag(i)}
-            className={`flex items-center gap-3 p-4 rounded-2xl border-2 text-left transition-all ${getStyle(i)}`}
+            onClick={() => toggleItem(item.id)}
+            className={`flex items-center gap-3 p-4 rounded-2xl border-2 text-left transition-all ${getStyle(item)}`}
           >
-            <span className="text-2xl flex-shrink-0">{getIcon(i)}</span>
+            <span className="text-2xl flex-shrink-0">{getIcon(item)}</span>
             <div className="flex flex-col">
-              <span className="text-base font-semibold">{flag}</span>
-              {confirmed && !selected.includes(i) && (
+              <span className="text-base font-semibold">{item.text}</span>
+              {confirmed && item.isCorrect && !selected.includes(item.id) && (
                 <span className="text-yellow-300 text-xs font-bold mt-0.5">{missedLabel}</span>
+              )}
+              {confirmed && !item.isCorrect && selected.includes(item.id) && (
+                <span className="text-red-300 text-xs font-bold mt-0.5">{wrongLabel}</span>
               )}
             </div>
           </motion.button>
@@ -94,7 +117,15 @@ export default function RedFlagSelector({ redFlags, sageExplanation, onContinue 
           animate={{ opacity: 1, y: 0 }}
           className="flex flex-col items-center gap-4"
         >
-          {/* Sage explanation — appears after reveal */}
+          {/* Points breakdown */}
+          <div className="w-full bg-white/10 rounded-2xl px-4 py-3 flex justify-between items-center">
+            <span className="text-white/80 font-bold text-sm">
+              {lang === 'es' ? 'Puntos ganados:' : 'Points earned:'}
+            </span>
+            <span className="text-gold font-black text-xl">+{pointsEarned}</span>
+          </div>
+
+          {/* Sage explanation */}
           <div className="flex items-start gap-3 bg-white rounded-3xl p-5 shadow-lg w-full">
             <img src={IMAGES.sage_full} alt="Sage" className="w-16 h-20 object-contain flex-shrink-0" />
             <div>

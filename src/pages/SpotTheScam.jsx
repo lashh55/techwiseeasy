@@ -196,6 +196,7 @@ export default function SpotTheScam() {
             >
               <RedFlagSelector
                 redFlags={level.redFlags}
+                distractor={level.distractor || null}
                 sageExplanation={level.sageExplanation}
                 onContinue={handleRedFlagsContinue}
               />

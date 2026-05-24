@@ -1,4 +1,5 @@
 // Spot the Scam — 5 Text Message levels, bilingual
+// redFlags = correct answers; distractor = one plausible-but-wrong item per scam level
 
 export const SCAM_LEVELS = [
   {
@@ -20,6 +21,10 @@ export const SCAM_LEVELS = [
         "Crea urgencia sobre un paquete",
         "Te pide que hagas clic en un enlace desconocido",
       ],
+    },
+    distractor: {
+      en: "The message was sent during daytime hours",
+      es: "El mensaje fue enviado durante el día",
     },
     sageExplanation: {
       en: "Real USPS messages never ask you to click a link to reschedule. Always go directly to usps.com by typing it yourself — never through a link in a text.",
@@ -46,6 +51,10 @@ export const SCAM_LEVELS = [
         "Amenaza con cerrar tu cuenta para asustarte",
       ],
     },
+    distractor: {
+      en: "The message mentions your bank by name",
+      es: "El mensaje menciona tu banco por nombre",
+    },
     sageExplanation: {
       en: "Banks never send texts with urgent threats and random links. If you are ever worried about your account, call the number printed on the back of your card directly.",
       es: "Los bancos nunca envían mensajes con amenazas urgentes y enlaces aleatorios. Si alguna vez te preocupa tu cuenta, llama directamente al número impreso en el reverso de tu tarjeta.",
@@ -60,6 +69,7 @@ export const SCAM_LEVELS = [
       es: "Amazon: Tu pedido #114-8827364 ha sido enviado. Rastréalo en amazon.com/orders",
     },
     redFlags: null,
+    distractor: null,
     sageExplanation: {
       en: "This one is real — it uses amazon.com, has a specific order number, and does not ask for personal information or create urgency. Always check for these three things.",
       es: "Este es real — usa amazon.com, tiene un número de pedido específico y no pide información personal ni crea urgencia. Siempre verifica estas tres cosas.",
@@ -85,6 +95,10 @@ export const SCAM_LEVELS = [
         "Te pide que respondas con confirmación personal",
       ],
     },
+    distractor: {
+      en: "The message uses friendly language",
+      es: "El mensaje usa un lenguaje amigable",
+    },
     sageExplanation: {
       en: "You cannot win a contest you never entered. Scammers use excitement and urgency to make you act before you think. Always pause — and delete.",
       es: "No puedes ganar un concurso en el que nunca participaste. Los estafadores usan entusiasmo y urgencia para hacerte actuar antes de pensar. Siempre haz una pausa — y elimina el mensaje.",
@@ -102,13 +116,17 @@ export const SCAM_LEVELS = [
       en: [
         "Requests your Social Security number via text",
         "Medicare never contacts you this way",
-        "Your SSN cannot be verified or updated by text",
+        "You should never verify or update your SSN with anyone over text or email",
       ],
       es: [
         "Solicita tu número de Seguro Social por mensaje de texto",
         "Medicare nunca te contacta de esta manera",
-        "Tu número de Seguro Social no puede verificarse por mensaje",
+        "Nunca debes verificar ni actualizar tu SSN con nadie por mensaje o correo",
       ],
+    },
+    distractor: {
+      en: "The message appears to be from a government agency",
+      es: "El mensaje parece provenir de una agencia gubernamental",
     },
     sageExplanation: {
       en: "Medicare will NEVER ask for your Social Security number by text or phone. If you receive this, delete it immediately and call Medicare directly at 1-800-MEDICARE.",
