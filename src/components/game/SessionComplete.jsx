@@ -3,11 +3,11 @@ import { motion } from 'framer-motion';
 import { IMAGES } from '@/lib/images';
 import { useLanguage } from '@/lib/i18n';
 
-export default function SessionComplete({ totalPoints, levelCount, onHome, onReplay }) {
+export default function SessionComplete({ totalPoints, maxPossiblePoints, levelCount, onHome, onReplay }) {
   const { lang } = useLanguage();
 
-  const maxPoints = levelCount * 15;
-  const percent = Math.round((totalPoints / maxPoints) * 100);
+  const maxPoints = maxPossiblePoints || levelCount * 15;
+  const percent = maxPoints > 0 ? Math.round((totalPoints / maxPoints) * 100) : 0;
 
   const headline = lang === 'es' ? '¡Sesión Completa!' : 'Session Complete!';
   const subtitle = lang === 'es'
@@ -41,7 +41,7 @@ export default function SessionComplete({ totalPoints, levelCount, onHome, onRep
         <div className="w-full bg-white/10 rounded-3xl p-6 border border-white/20 text-center">
           <p className="text-white/70 font-bold text-base mb-1">{pointsLabel}</p>
           <p className="text-5xl font-black text-gold">+{totalPoints}</p>
-          <p className="text-white/60 text-sm mt-1">/ {maxPoints} possible</p>
+          <p className="text-white/60 text-sm mt-1">/ {maxPoints} {lang === 'es' ? 'posible' : 'possible'}</p>
         </div>
 
         <div className="bg-white/10 rounded-2xl px-5 py-4 w-full text-center border border-white/20">

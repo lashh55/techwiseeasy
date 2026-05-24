@@ -21,6 +21,7 @@ export default function SpotTheScam() {
   const [attempt, setAttempt] = useState(1); // 1 or 2
   const [isCorrect, setIsCorrect] = useState(false);
   const [totalPoints, setTotalPoints] = useState(0);
+  const [maxPossiblePoints, setMaxPossiblePoints] = useState(0);
   const [sessionDone, setSessionDone] = useState(false);
 
   const level = SCAM_LEVELS[levelIndex];
@@ -35,6 +36,7 @@ export default function SpotTheScam() {
     if (correct) {
       const pts = attempt === 1 ? 15 : 10;
       setTotalPoints(prev => prev + pts);
+      setMaxPossiblePoints(prev => prev + pts);
       // For scam correct — show red flags first, then feedback
       if (level.isScam && level.redFlags) {
         setPhase('redflags');
@@ -57,7 +59,9 @@ export default function SpotTheScam() {
     }
   };
 
-  const handleRedFlagsContinue = () => {
+  const handleRedFlagsContinue = (flagPointsEarned, flagMaxPoints) => {
+    setTotalPoints(prev => prev + flagPointsEarned);
+    setMaxPossiblePoints(prev => prev + flagMaxPoints);
     advanceLevel();
   };
 
@@ -84,6 +88,7 @@ export default function SpotTheScam() {
     return (
       <SessionComplete
         totalPoints={totalPoints}
+        maxPossiblePoints={maxPossiblePoints}
         levelCount={SCAM_LEVELS.length}
         onHome={() => navigate('/home')}
         onReplay={() => {
@@ -92,6 +97,7 @@ export default function SpotTheScam() {
           setAttempt(1);
           setIsCorrect(false);
           setTotalPoints(0);
+          setMaxPossiblePoints(0);
           setSessionDone(false);
         }}
       />

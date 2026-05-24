@@ -3,7 +3,8 @@ import { motion } from 'framer-motion';
 import { useLanguage } from '@/lib/i18n';
 import { IMAGES } from '@/lib/images';
 
-// All defined red flags are correct answers — users should select all of them.
+// All defined red flags are correct answers.
+// onContinue(pointsEarned, maxPoints) — called with how many points the user earned.
 export default function RedFlagSelector({ redFlags, sageExplanation, onContinue }) {
   const { lang } = useLanguage();
   const [selected, setSelected] = useState([]);
@@ -11,6 +12,7 @@ export default function RedFlagSelector({ redFlags, sageExplanation, onContinue 
 
   const flags = redFlags[lang] || redFlags.en;
   const explanation = sageExplanation[lang] || sageExplanation.en;
+  const totalFlags = flags.length;
 
   const toggleFlag = (i) => {
     if (confirmed) return;
@@ -19,31 +21,39 @@ export default function RedFlagSelector({ redFlags, sageExplanation, onContinue 
 
   const handleConfirm = () => setConfirmed(true);
 
+  // All flags are correct answers — every selected one is correct, every unselected one is missed
   const getStyle = (i) => {
     if (!confirmed) {
       return selected.includes(i)
-        ? 'bg-red-500/20 border-red-400 text-white'
+        ? 'bg-white/20 border-white/60 text-white'
         : 'bg-white/10 border-white/20 text-white/80 hover:bg-white/15';
     }
-    // After confirm: all flags are correct — selected ones get green check, missed ones also get green
-    const wasSelected = selected.includes(i);
-    return 'bg-green-500/20 border-green-400 text-white';
+    if (selected.includes(i)) {
+      // Correctly selected → green
+      return 'bg-green-500/20 border-green-400 text-white';
+    }
+    // Not selected but correct → gold border "missed"
+    return 'bg-yellow-500/10 border-yellow-400 text-white/90';
   };
 
   const getIcon = (i) => {
     if (!confirmed) {
       return selected.includes(i) ? '🚩' : '◻️';
     }
-    const wasSelected = selected.includes(i);
-    // All are correct — selected = ✅, missed = ✅ (so user learns)
-    // But if user selected something wrong... all flags ARE correct here, so just show ✅
-    return '✅';
+    if (selected.includes(i)) return '✅';
+    return '👆'; // missed
   };
+
+  const missedLabel = lang === 'es' ? 'Perdiste este' : 'You missed this one';
+
+  const pointsPerFlag = 5; // 5 pts per correct red flag selected
+  const pointsEarned = selected.length * pointsPerFlag;
+  const maxPoints = totalFlags * pointsPerFlag;
 
   return (
     <div className="flex flex-col gap-4 w-full max-w-sm mx-auto">
       <p className="text-white font-bold text-lg text-center">
-        {lang === 'es' ? 'Selecciona las señales de alerta:' : 'Select the red flags:'}
+        {lang === 'es' ? 'Selecciona todas las señales de alerta:' : 'Select all the red flags:'}
       </p>
 
       <div className="flex flex-col gap-3">
@@ -57,7 +67,12 @@ export default function RedFlagSelector({ redFlags, sageExplanation, onContinue 
             className={`flex items-center gap-3 p-4 rounded-2xl border-2 text-left transition-all ${getStyle(i)}`}
           >
             <span className="text-2xl flex-shrink-0">{getIcon(i)}</span>
-            <span className="text-base font-semibold">{flag}</span>
+            <div className="flex flex-col">
+              <span className="text-base font-semibold">{flag}</span>
+              {confirmed && !selected.includes(i) && (
+                <span className="text-yellow-300 text-xs font-bold mt-0.5">{missedLabel}</span>
+              )}
+            </div>
           </motion.button>
         ))}
       </div>
@@ -91,7 +106,7 @@ export default function RedFlagSelector({ redFlags, sageExplanation, onContinue 
           </div>
 
           <button
-            onClick={onContinue}
+            onClick={() => onContinue(pointsEarned, maxPoints)}
             className="w-full py-4 bg-gold text-navy font-black text-lg rounded-2xl shadow-lg hover:bg-yellow-400 active:scale-[0.98] transition-all"
           >
             {lang === 'es' ? 'SIGUIENTE NIVEL →' : 'NEXT LEVEL →'}
