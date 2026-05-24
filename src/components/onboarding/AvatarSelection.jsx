@@ -16,7 +16,6 @@ const avatars = [
   { id: 'a10', image: IMAGES.avatar_10, label: 'Man 7' },
   { id: 'a11', image: IMAGES.avatar_11, label: 'Woman 4' },
   { id: 'a12', image: IMAGES.avatar_12, label: 'Woman 5' },
-  { id: 'a_owl', image: IMAGES.avatar_owl, label: 'Owl' },
 ];
 
 export default function AvatarSelection({ onNext, avatarValue, nameValue, onAvatarChange, onNameChange }) {
