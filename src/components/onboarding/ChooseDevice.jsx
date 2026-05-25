@@ -12,7 +12,7 @@ const devices = [
 
 export default function ChooseDevice({ onNext, value, onChange }) {
   const { t } = useLanguage();
-  const [selected, setSelected] = useState(value || 'iphone');
+  const [selected, setSelected] = useState(value || null);
 
   const handleSelect = (id) => {
     setSelected(id);
@@ -68,8 +68,12 @@ export default function ChooseDevice({ onNext, value, onChange }) {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.4 }}
-        onClick={onNext}
-        className="w-full max-w-sm py-5 bg-gold text-navy font-black text-xl rounded-2xl shadow-lg mt-6 hover:bg-yellow-400 active:scale-[0.98] transition-all min-h-[68px]"
+        onClick={() => { if (selected) onNext(); }}
+        className={`w-full max-w-sm py-5 font-black text-xl rounded-2xl shadow-lg mt-6 transition-all min-h-[68px] ${
+          selected
+            ? 'bg-gold text-navy hover:bg-yellow-400 active:scale-[0.98]'
+            : 'bg-white/20 text-white/40 cursor-not-allowed'
+        }`}
       >
         {t('thats_my_device')}
       </motion.button>
