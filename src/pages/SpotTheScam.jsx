@@ -6,11 +6,13 @@ import { useLanguage } from '@/lib/i18n';
 import { base44 } from '@/api/base44Client';
 import { SCAM_LEVELS } from '@/lib/scamLevels';
 import TextMessageBubble from '@/components/game/TextMessageBubble';
+import EmailBubble from '@/components/game/EmailBubble';
 import RedFlagSelector from '@/components/game/RedFlagSelector';
+import RealReasons from '@/components/game/RealReasons';
 import SageFeedback from '@/components/game/SageFeedback';
 import SessionComplete from '@/components/game/SessionComplete';
 
-// Phase: 'question' | 'redflags' | 'feedback' | 'complete'
+// Phase: 'question' | 'redflags' | 'realreasons' | 'feedback' | 'complete'
 
 export default function SpotTheScam() {
   const { lang } = useLanguage();
@@ -34,15 +36,16 @@ export default function SpotTheScam() {
     setIsCorrect(correct);
 
     if (correct) {
-      const pts = attempt === 1 ? 15 : 10;
-      setTotalPoints(prev => prev + pts);
-      setMaxPossiblePoints(prev => prev + pts);
-      // For scam correct — show red flags first, then feedback
-      if (level.isScam && level.redFlags) {
-        setPhase('redflags');
-      } else {
-        setPhase('feedback');
-      }
+    const pts = attempt === 1 ? 15 : 10;
+    setTotalPoints(prev => prev + pts);
+    setMaxPossiblePoints(prev => prev + pts);
+    if (level.isScam && level.redFlags) {
+      setPhase('redflags');
+    } else if (!level.isScam && level.realReasons) {
+      setPhase('realreasons');
+    } else {
+      setPhase('feedback');
+    }
     } else {
       // Wrong answer — show gentle feedback, no red flags yet
       setPhase('feedback');
@@ -160,7 +163,10 @@ export default function SpotTheScam() {
               transition={{ duration: 0.3 }}
               className="flex flex-col items-center gap-5 px-5 py-4"
             >
-              <TextMessageBubble sender={sender} message={message} />
+              {level.senderEmail
+                ? <EmailBubble senderName={sender} senderEmail={level.senderEmail} subject={level.subject?.[lang] || level.subject?.en} message={message} />
+                : <TextMessageBubble sender={sender} message={message} />
+              }
 
               {/* Instructions */}
               <p className="text-white/80 font-semibold text-base text-center">
@@ -199,6 +205,23 @@ export default function SpotTheScam() {
                 distractor={level.distractor || null}
                 sageExplanation={level.sageExplanation}
                 onContinue={handleRedFlagsContinue}
+              />
+            </motion.div>
+          )}
+
+          {phase === 'realreasons' && (
+            <motion.div
+              key={`rr-${levelIndex}`}
+              initial={{ opacity: 0, x: 40 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -40 }}
+              transition={{ duration: 0.3 }}
+              className="flex flex-col items-center gap-4 px-5 py-4"
+            >
+              <RealReasons
+                reasons={level.realReasons}
+                sageExplanation={level.sageExplanation}
+                onContinue={advanceLevel}
               />
             </motion.div>
           )}

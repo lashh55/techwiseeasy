@@ -134,6 +134,38 @@ export const SCAM_LEVELS = [
     },
   },
   {
+    id: 7,
+    isScam: false,
+    sender: { en: "Northside Medical Group", es: "Northside Medical Group" },
+    senderEmail: "appointments@northsidemedical.org",
+    subject: {
+      en: "Reminder: Your appointment tomorrow at 2:00 PM",
+      es: "Recordatorio: Tu cita mañana a las 2:00 PM",
+    },
+    message: {
+      en: "This is a reminder from Northside Medical Group for your appointment with Dr. Williams on Tuesday at 2:00 PM. Reply to confirm or call 312-555-0100 to reschedule.",
+      es: "Este es un recordatorio de Northside Medical Group para tu cita con la Dra. Williams el martes a las 2:00 PM. Responde para confirmar o llama al 312-555-0100 para reprogramar.",
+    },
+    redFlags: null,
+    distractor: null,
+    realReasons: {
+      en: [
+        "Comes from a legitimate, verified domain",
+        "Contains specific appointment details — no urgency",
+        "Provides a direct phone number to call",
+      ],
+      es: [
+        "Proviene de un dominio legítimo y verificado",
+        "Contiene detalles específicos de la cita — sin urgencia",
+        "Proporciona un número de teléfono directo para llamar",
+      ],
+    },
+    sageExplanation: {
+      en: "This is a real email — it comes from a legitimate domain, has specific details, creates no urgency, and gives you a direct phone number. Good habit: always check that emails from organizations come from their official domain. When in doubt, go directly to the organization's website — never through a link in an email.",
+      es: "Este es un correo real — proviene de un dominio legítimo, tiene detalles específicos, no crea urgencia y te da un número de teléfono directo. Buen hábito: siempre verifica que los correos de organizaciones vengan de su dominio oficial. En caso de duda, ve directamente al sitio web de la organización — nunca a través de un enlace en un correo.",
+    },
+  },
+  {
     id: 6,
     isScam: true,
     sender: { en: "PayPal Support", es: "Soporte de PayPal" },
