@@ -133,4 +133,35 @@ export const SCAM_LEVELS = [
       es: "Medicare NUNCA pedirá tu número de Seguro Social por mensaje o teléfono. Si recibes esto, elimínalo de inmediato y llama a Medicare directamente al 1-800-MEDICARE.",
     },
   },
+  {
+    id: 6,
+    isScam: true,
+    sender: { en: "PayPal Support", es: "Soporte de PayPal" },
+    message: {
+      en: "PayPal: Your account has been suspended due to unusual activity. Verify your information within 24 hours to restore access: paypal-account-verify.net/restore",
+      es: "PayPal: Tu cuenta ha sido suspendida por actividad inusual. Verifica tu información dentro de 24 horas para restaurar el acceso: paypal-account-verify.net/restore",
+    },
+    redFlags: {
+      en: [
+        "Fake domain — real PayPal uses paypal.com only",
+        "Artificial 24-hour deadline creates panic",
+        "Threatens account suspension to force action",
+        "Asks you to click a link to 'verify' information",
+      ],
+      es: [
+        "Dominio falso — el PayPal real solo usa paypal.com",
+        "El plazo artificial de 24 horas crea pánico",
+        "Amenaza con suspensión de cuenta para forzarte a actuar",
+        "Te pide que hagas clic en un enlace para 'verificar' información",
+      ],
+    },
+    distractor: {
+      en: "The message mentions your account has unusual activity",
+      es: "El mensaje menciona que tu cuenta tiene actividad inusual",
+    },
+    sageExplanation: {
+      en: "PayPal will NEVER send you to a site other than paypal.com. Scammers copy the look of real companies. If you are worried, open your browser and type paypal.com yourself — never click the link in the message.",
+      es: "PayPal NUNCA te enviará a un sitio que no sea paypal.com. Los estafadores copian la apariencia de empresas reales. Si te preocupa, abre tu navegador y escribe paypal.com tú misma — nunca hagas clic en el enlace del mensaje.",
+    },
+  },
 ];

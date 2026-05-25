@@ -19,7 +19,7 @@ export default function Onboarding() {
   const { lang } = useLanguage();
   const [step, setStep] = useState(0);
   const [settings, setSettings] = useState({
-    device_type: 'iphone',
+    device_type: null,
     text_size: 'large',
     audio_narration: true,
     avatar_id: 'a1',
