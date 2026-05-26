@@ -166,6 +166,40 @@ export const SCAM_LEVELS = [
     },
   },
   {
+    id: 9,
+    isScam: true,
+    sender: { en: "Amazon Security Team", es: "Equipo de Seguridad de Amazon" },
+    senderEmail: "amazon-security-team@amazon-alerts-center.com",
+    subject: {
+      en: "Your Amazon account was accessed from an unknown device",
+      es: "Se accedió a tu cuenta de Amazon desde un dispositivo desconocido",
+    },
+    message: {
+      en: "Someone in Nigeria has logged into your account. Click SECURE MY ACCOUNT NOW immediately.",
+      es: "Alguien en Nigeria ha iniciado sesión en tu cuenta. Haz clic en PROTEGER MI CUENTA AHORA de inmediato.",
+    },
+    redFlags: {
+      en: [
+        "Not a real Amazon domain — amazon.com is the only legitimate Amazon domain",
+        "Uses fear tactics about your account being accessed",
+        "Pressures you to click immediately without thinking",
+      ],
+      es: [
+        "No es un dominio real de Amazon — amazon.com es el único dominio legítimo de Amazon",
+        "Usa tácticas de miedo sobre el acceso a tu cuenta",
+        "Te presiona a hacer clic de inmediato sin pensar",
+      ],
+    },
+    distractor: {
+      en: "The email mentions your account by name",
+      es: "El correo menciona tu cuenta por nombre",
+    },
+    sageExplanation: {
+      en: "Amazon's only real domain is amazon.com — nothing else is legitimate. Scammers use fear about account security to make you click fast. Always go directly to amazon.com yourself and check your account — never click any link in an email.",
+      es: "El único dominio real de Amazon es amazon.com — nada más es legítimo. Los estafadores usan el miedo sobre la seguridad de tu cuenta para hacerte hacer clic rápido. Siempre ve directamente a amazon.com tú misma y verifica tu cuenta — nunca hagas clic en ningún enlace de un correo.",
+    },
+  },
+  {
     id: 8,
     isScam: true,
     sender: { en: "IRS Tax Refund", es: "Reembolso de Impuestos IRS" },
