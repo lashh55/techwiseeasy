@@ -11,6 +11,7 @@ import RedFlagSelector from '@/components/game/RedFlagSelector';
 import RealReasons from '@/components/game/RealReasons';
 import SageFeedback from '@/components/game/SageFeedback';
 import SessionComplete from '@/components/game/SessionComplete';
+import BossChallengeComplete from '@/components/game/BossChallengeComplete';
 
 // Phase: 'question' | 'redflags' | 'realreasons' | 'feedback' | 'complete'
 
@@ -20,52 +21,76 @@ export default function SpotTheScam() {
 
   const [levelIndex, setLevelIndex] = useState(0);
   const [phase, setPhase] = useState('question');
-  const [attempt, setAttempt] = useState(1); // 1 or 2
+  const [attempt, setAttempt] = useState(1);
   const [isCorrect, setIsCorrect] = useState(false);
   const [totalPoints, setTotalPoints] = useState(0);
   const [maxPossiblePoints, setMaxPossiblePoints] = useState(0);
   const [sessionDone, setSessionDone] = useState(false);
 
+  // Boss challenge sub-state
+  const [bossEmailIndex, setBossEmailIndex] = useState(0);
+  const [bossDone, setBossDone] = useState(false);
+  const [bossPoints, setBossPoints] = useState(0);
+
   const level = SCAM_LEVELS[levelIndex];
-  const sender = level.sender[lang] || level.sender.en;
-  const message = level.message[lang] || level.message.en;
-  const explanation = level.sageExplanation[lang] || level.sageExplanation.en;
+  const isBoss = !!level.isBossChallenge;
+  // For boss, use current sub-email; for regular, use level directly
+  const activeLevel = isBoss ? level.emails[bossEmailIndex] : level;
+  const sender = activeLevel.sender?.[lang] || activeLevel.sender?.en || '';
+  const message = activeLevel.message?.[lang] || activeLevel.message?.en || '';
+  const explanation = activeLevel.sageExplanation?.[lang] || activeLevel.sageExplanation?.en || '';
 
   const handleAnswer = (tappedScam) => {
-    const correct = tappedScam === level.isScam;
+    const correct = tappedScam === activeLevel.isScam;
     setIsCorrect(correct);
 
     if (correct) {
-    const pts = attempt === 1 ? 15 : 10;
-    setTotalPoints(prev => prev + pts);
-    setMaxPossiblePoints(prev => prev + pts);
-    if (level.isScam && level.redFlags) {
-      setPhase('redflags');
-    } else if (!level.isScam && level.realReasons) {
-      setPhase('realreasons');
+      const pts = attempt === 1 ? 15 : 10;
+      setTotalPoints(prev => prev + pts);
+      setMaxPossiblePoints(prev => prev + pts);
+      if (isBoss) setBossPoints(prev => prev + pts);
+      if (activeLevel.isScam && activeLevel.redFlags) {
+        setPhase('redflags');
+      } else if (!activeLevel.isScam && activeLevel.realReasons) {
+        setPhase('realreasons');
+      } else {
+        setPhase('feedback');
+      }
     } else {
-      setPhase('feedback');
-    }
-    } else {
-      // Wrong answer — show gentle feedback, no red flags yet
       setPhase('feedback');
     }
   };
 
   const handleFeedbackContinue = () => {
     if (!isCorrect && attempt === 1) {
-      // Give them a second try
       setAttempt(2);
       setPhase('question');
     } else {
-      advanceLevel();
+      advanceEmail();
     }
   };
 
   const handleRedFlagsContinue = (flagPointsEarned, flagMaxPoints) => {
     setTotalPoints(prev => prev + flagPointsEarned);
     setMaxPossiblePoints(prev => prev + flagMaxPoints);
-    advanceLevel();
+    if (isBoss) setBossPoints(prev => prev + flagPointsEarned);
+    advanceEmail();
+  };
+
+  // Advance within boss sub-emails or to next top-level level
+  const advanceEmail = () => {
+    if (isBoss) {
+      if (bossEmailIndex < level.emails.length - 1) {
+        setBossEmailIndex(prev => prev + 1);
+        setPhase('question');
+        setAttempt(1);
+        setIsCorrect(false);
+      } else {
+        setBossDone(true);
+      }
+    } else {
+      advanceLevel();
+    }
   };
 
   const advanceLevel = async () => {
@@ -75,7 +100,6 @@ export default function SpotTheScam() {
       setAttempt(1);
       setIsCorrect(false);
     } else {
-      // Session complete — save points
       const records = await base44.entities.UserProgress.list();
       if (records && records.length > 0) {
         const current = records[0];
@@ -86,6 +110,15 @@ export default function SpotTheScam() {
       setSessionDone(true);
     }
   };
+
+  if (bossDone) {
+    return (
+      <BossChallengeComplete
+        totalPoints={bossPoints}
+        onClaim={advanceLevel}
+      />
+    );
+  }
 
   if (sessionDone) {
     return (
@@ -138,12 +171,25 @@ export default function SpotTheScam() {
 
       {/* Level label */}
       <div className="text-center px-6 pt-1 pb-2 flex-shrink-0">
-        <p className="text-white/60 font-bold text-sm">
-          {lang === 'es' ? `NIVEL ${levelIndex + 1} DE ${SCAM_LEVELS.length}` : `LEVEL ${levelIndex + 1} OF ${SCAM_LEVELS.length}`}
-        </p>
-        <h2 className="text-white font-black text-xl">
-          {lang === 'es' ? '¿Real o Fraude?' : 'Real or Scam?'}
-        </h2>
+        {isBoss ? (
+          <>
+            <p className="text-gold font-black text-sm tracking-wide uppercase">
+              {lang === 'es' ? '🏆 Reto Final' : '🏆 Boss Challenge'}
+            </p>
+            <h2 className="text-white font-black text-lg leading-tight">
+              {lang === 'es' ? `Correo ${bossEmailIndex + 1} de ${level.emails.length}` : `Email ${bossEmailIndex + 1} of ${level.emails.length}`}
+            </h2>
+          </>
+        ) : (
+          <>
+            <p className="text-white/60 font-bold text-sm">
+              {lang === 'es' ? `NIVEL ${levelIndex + 1} DE ${SCAM_LEVELS.length}` : `LEVEL ${levelIndex + 1} OF ${SCAM_LEVELS.length}`}
+            </p>
+            <h2 className="text-white font-black text-xl">
+              {lang === 'es' ? '¿Real o Fraude?' : 'Real or Scam?'}
+            </h2>
+          </>
+        )}
         {attempt === 2 && (
           <p className="text-yellow-300 font-bold text-sm mt-0.5">
             {lang === 'es' ? '¡Intento 2! Piénsalo bien...' : 'Try 2! Think it through...'}
@@ -163,8 +209,8 @@ export default function SpotTheScam() {
               transition={{ duration: 0.3 }}
               className="flex flex-col items-center gap-5 px-5 py-4"
             >
-              {level.senderEmail
-                ? <EmailBubble senderName={sender} senderEmail={level.senderEmail} subject={level.subject?.[lang] || level.subject?.en} message={message} />
+              {activeLevel.senderEmail
+                ? <EmailBubble senderName={sender} senderEmail={activeLevel.senderEmail} subject={activeLevel.subject?.[lang] || activeLevel.subject?.en} message={message} />
                 : <TextMessageBubble sender={sender} message={message} />
               }
 
@@ -201,9 +247,9 @@ export default function SpotTheScam() {
               className="flex flex-col items-center gap-4 px-5 py-4"
             >
               <RedFlagSelector
-                redFlags={level.redFlags}
-                distractor={level.distractor || null}
-                sageExplanation={level.sageExplanation}
+                redFlags={activeLevel.redFlags}
+                distractor={activeLevel.distractor || null}
+                sageExplanation={activeLevel.sageExplanation}
                 onContinue={handleRedFlagsContinue}
               />
             </motion.div>
@@ -219,9 +265,9 @@ export default function SpotTheScam() {
               className="flex flex-col items-center gap-4 px-5 py-4"
             >
               <RealReasons
-                reasons={level.realReasons}
-                sageExplanation={level.sageExplanation}
-                onContinue={advanceLevel}
+                reasons={activeLevel.realReasons}
+                sageExplanation={activeLevel.sageExplanation}
+                onContinue={advanceEmail}
               />
             </motion.div>
           )}

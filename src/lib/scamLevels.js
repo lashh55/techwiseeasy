@@ -134,6 +134,117 @@ export const SCAM_LEVELS = [
     },
   },
   {
+    id: 10,
+    isBossChallenge: true,
+    title: {
+      en: "Boss Challenge — Email Expert!",
+      es: "Reto Final — ¡Experta en Correos!",
+    },
+    instructions: {
+      en: "You've seen text scams and email scams. Now sort these 5 emails — are they REAL or SCAM? Think carefully!",
+      es: "Ya viste estafas por texto y por correo. Ahora clasifica estos 5 correos — ¿son REALES o FRAUDE? ¡Piénsalo bien!",
+    },
+    emails: [
+      {
+        id: "b1",
+        isScam: false,
+        sender: { en: "City Library", es: "Biblioteca Municipal" },
+        senderEmail: "library@citylib.org",
+        subject: { en: "Your book hold is ready for pickup", es: "Tu libro reservado está listo para recoger" },
+        message: {
+          en: "The book you requested is ready for pickup at the Main Branch. It will be held for 7 days. Library hours are Mon-Sat 9AM-8PM.",
+          es: "El libro que solicitaste está listo para recoger en la Sucursal Principal. Se guardará por 7 días. Horario: lunes a sábado de 9AM a 8PM.",
+        },
+        realReasons: {
+          en: ["Official library domain", "Specific details with no urgency", "No links to click, no personal info requested"],
+          es: ["Dominio oficial de la biblioteca", "Detalles específicos sin urgencia", "Sin enlaces ni solicitud de información personal"],
+        },
+        sageExplanation: {
+          en: "This is a real library notification — it uses an official domain, gives specific details, creates no urgency, and asks for nothing personal.",
+          es: "Esta es una notificación real de la biblioteca — usa un dominio oficial, da detalles específicos, no crea urgencia y no pide nada personal.",
+        },
+      },
+      {
+        id: "b2",
+        isScam: true,
+        sender: { en: "Netflix Billing", es: "Facturación de Netflix" },
+        senderEmail: "netflix-billing@netf1ix-support.com",
+        subject: { en: "Your Netflix payment has failed — action required", es: "Tu pago de Netflix ha fallado — acción requerida" },
+        message: {
+          en: "Your payment method was declined. Update your billing information within 24 hours or your account will be cancelled.",
+          es: "Tu método de pago fue rechazado. Actualiza tu información de facturación en 24 horas o tu cuenta será cancelada.",
+        },
+        redFlags: {
+          en: ["Misspelled domain — 'netf1ix' uses a number 1 instead of the letter l", "24-hour deadline is an urgency threat", "Requests your billing information"],
+          es: ["Dominio mal escrito — 'netf1ix' usa el número 1 en lugar de la letra l", "El plazo de 24 horas es una amenaza de urgencia", "Solicita tu información de facturación"],
+        },
+        distractor: { en: "The email mentions your subscription", es: "El correo menciona tu suscripción" },
+        sageExplanation: {
+          en: "Netflix's real domain is netflix.com only. Scammers swap letters for numbers — 'netf1ix' with a '1' is a fake. If Netflix ever has a billing issue, log in directly at netflix.com yourself.",
+          es: "El dominio real de Netflix es solo netflix.com. Los estafadores cambian letras por números — 'netf1ix' con un '1' es falso. Si Netflix tiene un problema de pago, inicia sesión directamente en netflix.com tú misma.",
+        },
+      },
+      {
+        id: "b3",
+        isScam: false,
+        sender: { en: "UPS", es: "UPS" },
+        senderEmail: "auto-notify@ups.com",
+        subject: { en: "UPS Shipment Notification — Tracking #1Z999AA10123456784", es: "Notificación de envío UPS — Seguimiento #1Z999AA10123456784" },
+        message: {
+          en: "Your package has shipped. Expected delivery: Tuesday. Track at ups.com",
+          es: "Tu paquete ha sido enviado. Entrega prevista: martes. Rastrea en ups.com",
+        },
+        realReasons: {
+          en: ["Official UPS domain (ups.com)", "Real tracking number format", "Directs you to ups.com — not a suspicious link"],
+          es: ["Dominio oficial de UPS (ups.com)", "Formato real de número de seguimiento", "Te dirige a ups.com — no a un enlace sospechoso"],
+        },
+        sageExplanation: {
+          en: "This is a real UPS notification — it comes from ups.com, has a real tracking number format, and directs you to the official UPS website.",
+          es: "Esta es una notificación real de UPS — viene de ups.com, tiene un formato de número de seguimiento real y te dirige al sitio web oficial de UPS.",
+        },
+      },
+      {
+        id: "b4",
+        isScam: true,
+        sender: { en: "SSA Benefits", es: "Beneficios SSA" },
+        senderEmail: "ssa-benefits@gmail.com",
+        subject: { en: "URGENT — Your Social Security benefits have been suspended", es: "URGENTE — Tus beneficios del Seguro Social han sido suspendidos" },
+        message: {
+          en: "Due to suspicious activity your benefits have been suspended. Call 1-888-555-0199 immediately to restore them.",
+          es: "Debido a actividad sospechosa, tus beneficios han sido suspendidos. Llama al 1-888-555-0199 de inmediato para restaurarlos.",
+        },
+        redFlags: {
+          en: ["The Social Security Administration never uses Gmail", "Social Security benefits cannot be suspended this way", "URGENT language is designed to panic you"],
+          es: ["La Administración del Seguro Social nunca usa Gmail", "Los beneficios del Seguro Social no se pueden suspender de esta manera", "El lenguaje URGENTE está diseñado para generarte pánico"],
+        },
+        distractor: { en: "The email mentions your Social Security benefits", es: "El correo menciona tus beneficios del Seguro Social" },
+        sageExplanation: {
+          en: "The Social Security Administration only contacts you by official U.S. mail — never by email or phone. Any email about suspended benefits is always a scam. If concerned, call SSA directly at 1-800-772-1213.",
+          es: "La Administración del Seguro Social solo se comunica por correo postal oficial — nunca por email o teléfono. Cualquier correo sobre beneficios suspendidos es siempre una estafa. Si te preocupa, llama directamente a SSA al 1-800-772-1213.",
+        },
+      },
+      {
+        id: "b5",
+        isScam: false,
+        sender: { en: "Lakeside Medical", es: "Lakeside Medical" },
+        senderEmail: "reminders@lakesidemedical.com",
+        subject: { en: "Appointment reminder — Dr. Johnson — Thursday at 10:30 AM", es: "Recordatorio de cita — Dr. Johnson — Jueves a las 10:30 AM" },
+        message: {
+          en: "This is a reminder for your appointment with Dr. Johnson on Thursday at 10:30 AM. Call 312-555-0200 to reschedule. Please arrive 15 minutes early.",
+          es: "Este es un recordatorio de tu cita con el Dr. Johnson el jueves a las 10:30 AM. Llama al 312-555-0200 para reprogramar. Por favor llega 15 minutos antes.",
+        },
+        realReasons: {
+          en: ["Legitimate medical domain", "Specific appointment details — no urgency", "Provides a direct phone number, no links to click"],
+          es: ["Dominio médico legítimo", "Detalles específicos de la cita — sin urgencia", "Proporciona un número directo, sin enlaces que hacer clic"],
+        },
+        sageExplanation: {
+          en: "This is a real appointment reminder — it has a legitimate domain, specific details, a direct phone number, and creates no urgency. Real medical offices never ask for personal information by email.",
+          es: "Este es un recordatorio de cita real — tiene un dominio legítimo, detalles específicos, un número directo y no crea urgencia. Los consultorios médicos reales nunca piden información personal por correo.",
+        },
+      },
+    ],
+  },
+  {
     id: 7,
     isScam: false,
     sender: { en: "Northside Medical Group", es: "Northside Medical Group" },
