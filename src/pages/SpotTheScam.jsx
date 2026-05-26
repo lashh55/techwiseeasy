@@ -16,6 +16,8 @@ import BossChallengeComplete from '@/components/game/BossChallengeComplete';
 
 // Phase: 'question' | 'redflags' | 'realreasons' | 'feedback' | 'complete'
 
+const isPreview = typeof window !== 'undefined' && window.self !== window.top;
+
 export default function SpotTheScam() {
   const { lang } = useLanguage();
   const navigate = useNavigate();
@@ -169,6 +171,32 @@ export default function SpotTheScam() {
           <span className="text-gold font-black text-base">⭐ {totalPoints}</span>
         </div>
       </div>
+
+      {/* Preview-only jump control */}
+      {isPreview && (
+        <div className="flex items-center justify-center gap-2 px-4 pb-1">
+          <span className="text-white/40 text-xs font-bold">🛠 Jump:</span>
+          <select
+            value={levelIndex}
+            onChange={e => {
+              const idx = Number(e.target.value);
+              setLevelIndex(idx);
+              setPhase('question');
+              setAttempt(1);
+              setIsCorrect(false);
+              setBossEmailIndex(0);
+              setBossDone(false);
+            }}
+            className="bg-white/10 text-white text-xs font-bold rounded-lg px-2 py-1 border border-white/20 outline-none cursor-pointer"
+          >
+            {SCAM_LEVELS.map((lvl, i) => (
+              <option key={i} value={i} className="bg-navy text-white">
+                {i + 1}. {lvl.isBossChallenge ? '🏆 Boss Challenge' : lvl.isPhoneCall ? `📞 ID ${lvl.id}` : `ID ${lvl.id} — ${lvl.sender?.en || ''}`}
+              </option>
+            ))}
+          </select>
+        </div>
+      )}
 
       {/* Level label */}
       <div className="text-center px-6 pt-1 pb-2 flex-shrink-0">
