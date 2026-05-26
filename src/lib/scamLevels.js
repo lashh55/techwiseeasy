@@ -376,6 +376,35 @@ export const SCAM_LEVELS = [
     },
   },
   {
+    id: 12,
+    isScam: true,
+    isComputerPopup: true,
+    scenario: {
+      en: "A loud alarm pop-up appears on your screen. A person calls back and asks to remotely access your computer to fix the virus.",
+      es: "Una ventana emergente con una alarma fuerte aparece en tu pantalla. Una persona te llama de vuelta y pide acceso remoto a tu computadora para arreglar el virus.",
+    },
+    redFlags: {
+      en: [
+        "Microsoft never contacts you through browser pop-ups",
+        "Legitimate companies never ask for remote computer access this way",
+        "Never allow remote access unless YOU personally initiated the contact with a trusted source",
+      ],
+      es: [
+        "Microsoft nunca te contacta a través de ventanas emergentes del navegador",
+        "Las empresas legítimas nunca piden acceso remoto a tu computadora de esta manera",
+        "Nunca permitas acceso remoto a menos que TÚ hayas iniciado el contacto con una fuente de confianza",
+      ],
+    },
+    distractor: {
+      en: "The pop-up appears while you are browsing the internet",
+      es: "La ventana emergente aparece mientras navegas por internet",
+    },
+    sageExplanation: {
+      en: "Microsoft never contacts you this way. Never allow anyone to remotely access your computer unless you personally initiated the contact AND you fully trust the source. Even individuals posing as legitimate professionals have been known to exploit remote access to steal personal information or install harmful software. When in doubt, close the browser, restart your computer, and call a trusted family member before doing anything else.",
+      es: "Microsoft nunca te contacta de esta manera. Nunca permitas que nadie acceda remotamente a tu computadora a menos que tú hayas iniciado el contacto Y confíes plenamente en la fuente. Incluso personas que se hacen pasar por profesionales legítimos han utilizado el acceso remoto para robar información personal o instalar software dañino. En caso de duda, cierra el navegador, reinicia tu computadora y llama a un familiar de confianza antes de hacer cualquier otra cosa.",
+    },
+  },
+  {
     id: 6,
     isScam: true,
     sender: { en: "PayPal Support", es: "Soporte de PayPal" },

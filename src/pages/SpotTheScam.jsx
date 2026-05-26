@@ -8,6 +8,7 @@ import { SCAM_LEVELS } from '@/lib/scamLevels';
 import TextMessageBubble from '@/components/game/TextMessageBubble';
 import EmailBubble from '@/components/game/EmailBubble';
 import PhoneCallBubble from '@/components/game/PhoneCallBubble';
+import ComputerPopupBubble from '@/components/game/ComputerPopupBubble';
 import RedFlagSelector from '@/components/game/RedFlagSelector';
 import RealReasons from '@/components/game/RealReasons';
 import SageFeedback from '@/components/game/SageFeedback';
@@ -191,7 +192,7 @@ export default function SpotTheScam() {
           >
             {SCAM_LEVELS.map((lvl, i) => (
               <option key={i} value={i} className="bg-navy text-white">
-                {i + 1}. {lvl.isBossChallenge ? '🏆 Boss Challenge' : lvl.isPhoneCall ? `📞 ID ${lvl.id}` : `ID ${lvl.id} — ${lvl.sender?.en || ''}`}
+                {i + 1}. {lvl.isBossChallenge ? '🏆 Boss Challenge' : lvl.isPhoneCall ? `📞 ID ${lvl.id}` : lvl.isComputerPopup ? `💻 ID ${lvl.id}` : `ID ${lvl.id} — ${lvl.sender?.en || ''}`}
               </option>
             ))}
           </select>
@@ -238,22 +239,28 @@ export default function SpotTheScam() {
               transition={{ duration: 0.3 }}
               className="flex flex-col items-center gap-5 px-5 py-4"
             >
-              {activeLevel.isPhoneCall
-                ? <PhoneCallBubble
-                    callerName={activeLevel.callerName?.[lang] || activeLevel.callerName?.en}
-                    callerNumber={activeLevel.callerNumber}
+              {activeLevel.isComputerPopup
+                ? <ComputerPopupBubble
                     scenario={activeLevel.scenario?.[lang] || activeLevel.scenario?.en}
                   />
-                : activeLevel.senderEmail
-                  ? <EmailBubble senderName={sender} senderEmail={activeLevel.senderEmail} subject={activeLevel.subject?.[lang] || activeLevel.subject?.en} message={message} />
-                  : <TextMessageBubble sender={sender} message={message} />
+                : activeLevel.isPhoneCall
+                  ? <PhoneCallBubble
+                      callerName={activeLevel.callerName?.[lang] || activeLevel.callerName?.en}
+                      callerNumber={activeLevel.callerNumber}
+                      scenario={activeLevel.scenario?.[lang] || activeLevel.scenario?.en}
+                    />
+                  : activeLevel.senderEmail
+                    ? <EmailBubble senderName={sender} senderEmail={activeLevel.senderEmail} subject={activeLevel.subject?.[lang] || activeLevel.subject?.en} message={message} />
+                    : <TextMessageBubble sender={sender} message={message} />
               }
 
               {/* Instructions */}
               <p className="text-white/80 font-semibold text-base text-center">
-                {activeLevel.isPhoneCall
-                  ? (lang === 'es' ? 'Esta llamada es...' : 'This call is...')
-                  : (lang === 'es' ? 'Este mensaje es...' : 'This message is...')
+                {activeLevel.isComputerPopup
+                  ? (lang === 'es' ? 'Esto es...' : 'This is...')
+                  : activeLevel.isPhoneCall
+                    ? (lang === 'es' ? 'Esta llamada es...' : 'This call is...')
+                    : (lang === 'es' ? 'Este mensaje es...' : 'This message is...')
                 }
               </p>
 
