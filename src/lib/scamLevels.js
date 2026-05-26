@@ -166,6 +166,40 @@ export const SCAM_LEVELS = [
     },
   },
   {
+    id: 8,
+    isScam: true,
+    sender: { en: "IRS Tax Refund", es: "Reembolso de Impuestos IRS" },
+    senderEmail: "irs.tax.refund@gmail.com",
+    subject: {
+      en: "You have a pending tax refund of $847.00",
+      es: "Tienes un reembolso de impuestos pendiente de $847.00",
+    },
+    message: {
+      en: "The IRS has processed a refund in your name. Verify your bank account information immediately to receive your funds.",
+      es: "El IRS ha procesado un reembolso a tu nombre. Verifica la información de tu cuenta bancaria de inmediato para recibir tus fondos.",
+    },
+    redFlags: {
+      en: [
+        "The IRS does not use Gmail. The IRS does not use any email service — period.",
+        "The IRS only communicates through official U.S. mail — never email",
+        "Requests your bank account information",
+      ],
+      es: [
+        "El IRS no usa Gmail. El IRS no usa ningún servicio de correo electrónico — punto.",
+        "El IRS solo se comunica por correo postal oficial de EE.UU. — nunca por email",
+        "Solicita la información de tu cuenta bancaria",
+      ],
+    },
+    distractor: {
+      en: "The refund amount seems too small",
+      es: "El monto del reembolso parece demasiado pequeño",
+    },
+    sageExplanation: {
+      en: "The IRS does not use Gmail. The IRS does not use any email service to contact taxpayers. The IRS only communicates through official U.S. mail. Any email claiming to be from the IRS is always a scam — no exceptions.",
+      es: "El IRS no usa Gmail. El IRS no usa ningún servicio de correo electrónico para contactar a los contribuyentes. El IRS solo se comunica por correo postal oficial de EE.UU. Cualquier correo electrónico que afirme ser del IRS es siempre una estafa — sin excepciones.",
+    },
+  },
+  {
     id: 6,
     isScam: true,
     sender: { en: "PayPal Support", es: "Soporte de PayPal" },
