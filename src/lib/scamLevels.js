@@ -345,6 +345,37 @@ export const SCAM_LEVELS = [
     },
   },
   {
+    id: 11,
+    isScam: true,
+    isPhoneCall: true,
+    callerName: { en: "Social Security Administration", es: "Administración del Seguro Social" },
+    callerNumber: "1-800-555-0147",
+    scenario: {
+      en: "You receive a call from a man who says he is from the Social Security Administration. He says your Social Security number has been suspended due to suspicious activity and you must confirm your number immediately to avoid arrest.",
+      es: "Recibes una llamada de un hombre que dice ser de la Administración del Seguro Social. Dice que tu número de Seguro Social ha sido suspendido por actividad sospechosa y que debes confirmar tu número de inmediato para evitar ser arrestada.",
+    },
+    redFlags: {
+      en: [
+        "Your Social Security number cannot be suspended — that is not how it works",
+        "The SSA never calls to threaten arrest",
+        "Demands you confirm your SSN immediately",
+      ],
+      es: [
+        "Tu número de Seguro Social no puede ser suspendido — así no funciona",
+        "La SSA nunca llama para amenazar con arresto",
+        "Te exige que confirmes tu SSN de inmediato",
+      ],
+    },
+    distractor: {
+      en: "The caller knows your name and address",
+      es: "El llamante conoce tu nombre y dirección",
+    },
+    sageExplanation: {
+      en: "This is one of the most common scams targeting seniors. Your Social Security number cannot be suspended like a driver's license — that threat is completely fabricated. The Social Security Administration will never call to threaten you or ask for your number. Hang up immediately.",
+      es: "Esta es una de las estafas más comunes dirigidas a personas mayores. Tu número de Seguro Social no puede ser suspendido como una licencia de conducir — esa amenaza es completamente falsa. La Administración del Seguro Social nunca llamará para amenazarte ni pedirte tu número. Cuelga de inmediato.",
+    },
+  },
+  {
     id: 6,
     isScam: true,
     sender: { en: "PayPal Support", es: "Soporte de PayPal" },

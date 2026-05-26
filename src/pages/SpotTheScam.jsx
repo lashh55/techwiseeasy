@@ -7,6 +7,7 @@ import { base44 } from '@/api/base44Client';
 import { SCAM_LEVELS } from '@/lib/scamLevels';
 import TextMessageBubble from '@/components/game/TextMessageBubble';
 import EmailBubble from '@/components/game/EmailBubble';
+import PhoneCallBubble from '@/components/game/PhoneCallBubble';
 import RedFlagSelector from '@/components/game/RedFlagSelector';
 import RealReasons from '@/components/game/RealReasons';
 import SageFeedback from '@/components/game/SageFeedback';
@@ -209,14 +210,23 @@ export default function SpotTheScam() {
               transition={{ duration: 0.3 }}
               className="flex flex-col items-center gap-5 px-5 py-4"
             >
-              {activeLevel.senderEmail
-                ? <EmailBubble senderName={sender} senderEmail={activeLevel.senderEmail} subject={activeLevel.subject?.[lang] || activeLevel.subject?.en} message={message} />
-                : <TextMessageBubble sender={sender} message={message} />
+              {activeLevel.isPhoneCall
+                ? <PhoneCallBubble
+                    callerName={activeLevel.callerName?.[lang] || activeLevel.callerName?.en}
+                    callerNumber={activeLevel.callerNumber}
+                    scenario={activeLevel.scenario?.[lang] || activeLevel.scenario?.en}
+                  />
+                : activeLevel.senderEmail
+                  ? <EmailBubble senderName={sender} senderEmail={activeLevel.senderEmail} subject={activeLevel.subject?.[lang] || activeLevel.subject?.en} message={message} />
+                  : <TextMessageBubble sender={sender} message={message} />
               }
 
               {/* Instructions */}
               <p className="text-white/80 font-semibold text-base text-center">
-                {lang === 'es' ? 'Este mensaje es...' : 'This message is...'}
+                {activeLevel.isPhoneCall
+                  ? (lang === 'es' ? 'Esta llamada es...' : 'This call is...')
+                  : (lang === 'es' ? 'Este mensaje es...' : 'This message is...')
+                }
               </p>
 
               {/* REAL / SCAM buttons */}
