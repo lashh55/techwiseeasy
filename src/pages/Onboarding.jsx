@@ -22,7 +22,7 @@ export default function Onboarding() {
     device_type: null,
     text_size: 'large',
     audio_narration: true,
-    avatar_id: 'a1',
+    avatar_id: '',
     display_name: '',
     language: lang,
   });
