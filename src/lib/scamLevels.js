@@ -1,9 +1,11 @@
-// Spot the Scam — 5 Text Message levels, bilingual
+// Spot the Scam — levels in display order
+// displayOrder controls the Jump dropdown and gameplay sequence — never change existing values
 // redFlags = correct answers; distractor = one plausible-but-wrong item per scam level
 
 export const SCAM_LEVELS = [
   {
     id: 1,
+    displayOrder: 1,
     isScam: true,
     sender: { en: "USPS Alerts", es: "Alertas USPS" },
     message: {
@@ -33,6 +35,7 @@ export const SCAM_LEVELS = [
   },
   {
     id: 2,
+    displayOrder: 2,
     isScam: true,
     sender: { en: "Bank of America", es: "Bank of America" },
     message: {
@@ -62,6 +65,7 @@ export const SCAM_LEVELS = [
   },
   {
     id: 3,
+    displayOrder: 3,
     isScam: false,
     sender: { en: "Amazon", es: "Amazon" },
     message: {
@@ -77,6 +81,7 @@ export const SCAM_LEVELS = [
   },
   {
     id: 4,
+    displayOrder: 4,
     isScam: true,
     sender: { en: "Prize Center", es: "Centro de Premios" },
     message: {
@@ -106,6 +111,7 @@ export const SCAM_LEVELS = [
   },
   {
     id: 5,
+    displayOrder: 5,
     isScam: true,
     sender: { en: "Medicare Notice", es: "Aviso de Medicare" },
     message: {
@@ -135,6 +141,7 @@ export const SCAM_LEVELS = [
   },
   {
     id: 10,
+    displayOrder: 6,
     isBossChallenge: true,
     title: {
       en: "Boss Challenge — Email Expert!",
@@ -245,7 +252,40 @@ export const SCAM_LEVELS = [
     ],
   },
   {
+    id: 6,
+    displayOrder: 7,
+    isScam: true,
+    sender: { en: "PayPal Support", es: "Soporte de PayPal" },
+    message: {
+      en: "PayPal: Your account has been suspended due to unusual activity. Verify your information within 24 hours to restore access: paypal-account-verify.net/restore",
+      es: "PayPal: Tu cuenta ha sido suspendida por actividad inusual. Verifica tu información dentro de 24 horas para restaurar el acceso: paypal-account-verify.net/restore",
+    },
+    redFlags: {
+      en: [
+        "Fake domain — real PayPal uses paypal.com only",
+        "Artificial 24-hour deadline creates panic",
+        "Threatens account suspension to force action",
+        "Asks you to click a link to 'verify' information",
+      ],
+      es: [
+        "Dominio falso — el PayPal real solo usa paypal.com",
+        "El plazo artificial de 24 horas crea pánico",
+        "Amenaza con suspensión de cuenta para forzarte a actuar",
+        "Te pide que hagas clic en un enlace para 'verificar' información",
+      ],
+    },
+    distractor: {
+      en: "The message mentions your account has unusual activity",
+      es: "El mensaje menciona que tu cuenta tiene actividad inusual",
+    },
+    sageExplanation: {
+      en: "PayPal will NEVER send you to a site other than paypal.com. Scammers copy the look of real companies. If you are worried, open your browser and type paypal.com yourself — never click the link in the message.",
+      es: "PayPal NUNCA te enviará a un sitio que no sea paypal.com. Los estafadores copian la apariencia de empresas reales. Si te preocupa, abre tu navegador y escribe paypal.com tú misma — nunca hagas clic en el enlace del mensaje.",
+    },
+  },
+  {
     id: 7,
+    displayOrder: 8,
     isScam: false,
     sender: { en: "Northside Medical Group", es: "Northside Medical Group" },
     senderEmail: "appointments@northsidemedical.org",
@@ -277,41 +317,8 @@ export const SCAM_LEVELS = [
     },
   },
   {
-    id: 9,
-    isScam: true,
-    sender: { en: "Amazon Security Team", es: "Equipo de Seguridad de Amazon" },
-    senderEmail: "amazon-security-team@amazon-alerts-center.com",
-    subject: {
-      en: "Your Amazon account was accessed from an unknown device",
-      es: "Se accedió a tu cuenta de Amazon desde un dispositivo desconocido",
-    },
-    message: {
-      en: "Someone in Nigeria has logged into your account. Click SECURE MY ACCOUNT NOW immediately.",
-      es: "Alguien en Nigeria ha iniciado sesión en tu cuenta. Haz clic en PROTEGER MI CUENTA AHORA de inmediato.",
-    },
-    redFlags: {
-      en: [
-        "Not a real Amazon domain — amazon.com is the only legitimate Amazon domain",
-        "Uses fear tactics about your account being accessed",
-        "Pressures you to click immediately without thinking",
-      ],
-      es: [
-        "No es un dominio real de Amazon — amazon.com es el único dominio legítimo de Amazon",
-        "Usa tácticas de miedo sobre el acceso a tu cuenta",
-        "Te presiona a hacer clic de inmediato sin pensar",
-      ],
-    },
-    distractor: {
-      en: "The email mentions your account by name",
-      es: "El correo menciona tu cuenta por nombre",
-    },
-    sageExplanation: {
-      en: "Amazon's only real domain is amazon.com — nothing else is legitimate. Scammers use fear about account security to make you click fast. Always go directly to amazon.com yourself and check your account — never click any link in an email.",
-      es: "El único dominio real de Amazon es amazon.com — nada más es legítimo. Los estafadores usan el miedo sobre la seguridad de tu cuenta para hacerte hacer clic rápido. Siempre ve directamente a amazon.com tú misma y verifica tu cuenta — nunca hagas clic en ningún enlace de un correo.",
-    },
-  },
-  {
     id: 8,
+    displayOrder: 9,
     isScam: true,
     sender: { en: "IRS Tax Refund", es: "Reembolso de Impuestos IRS" },
     senderEmail: "irs.tax.refund@gmail.com",
@@ -345,7 +352,43 @@ export const SCAM_LEVELS = [
     },
   },
   {
+    id: 9,
+    displayOrder: 10,
+    isScam: true,
+    sender: { en: "Amazon Security Team", es: "Equipo de Seguridad de Amazon" },
+    senderEmail: "amazon-security-team@amazon-alerts-center.com",
+    subject: {
+      en: "Your Amazon account was accessed from an unknown device",
+      es: "Se accedió a tu cuenta de Amazon desde un dispositivo desconocido",
+    },
+    message: {
+      en: "Someone in Nigeria has logged into your account. Click SECURE MY ACCOUNT NOW immediately.",
+      es: "Alguien en Nigeria ha iniciado sesión en tu cuenta. Haz clic en PROTEGER MI CUENTA AHORA de inmediato.",
+    },
+    redFlags: {
+      en: [
+        "Not a real Amazon domain — amazon.com is the only legitimate Amazon domain",
+        "Uses fear tactics about your account being accessed",
+        "Pressures you to click immediately without thinking",
+      ],
+      es: [
+        "No es un dominio real de Amazon — amazon.com es el único dominio legítimo de Amazon",
+        "Usa tácticas de miedo sobre el acceso a tu cuenta",
+        "Te presiona a hacer clic de inmediato sin pensar",
+      ],
+    },
+    distractor: {
+      en: "The email mentions your account by name",
+      es: "El correo menciona tu cuenta por nombre",
+    },
+    sageExplanation: {
+      en: "Amazon's only real domain is amazon.com — nothing else is legitimate. Scammers use fear about account security to make you click fast. Always go directly to amazon.com yourself and check your account — never click any link in an email.",
+      es: "El único dominio real de Amazon es amazon.com — nada más es legítimo. Los estafadores usan el miedo sobre la seguridad de tu cuenta para hacerte hacer clic rápido. Siempre ve directamente a amazon.com tú misma y verifica tu cuenta — nunca hagas clic en ningún enlace de un correo.",
+    },
+  },
+  {
     id: 11,
+    displayOrder: 11,
     isScam: true,
     isPhoneCall: true,
     callerName: { en: "Social Security Administration", es: "Administración del Seguro Social" },
@@ -377,6 +420,7 @@ export const SCAM_LEVELS = [
   },
   {
     id: 12,
+    displayOrder: 12,
     isScam: true,
     isComputerPopup: true,
     scenario: {
@@ -404,35 +448,7 @@ export const SCAM_LEVELS = [
       es: "Microsoft nunca te contacta de esta manera. Nunca permitas que nadie acceda remotamente a tu computadora a menos que tú hayas iniciado el contacto Y confíes plenamente en la fuente. Incluso personas que se hacen pasar por profesionales legítimos han utilizado el acceso remoto para robar información personal o instalar software dañino. En caso de duda, cierra el navegador, reinicia tu computadora y llama a un familiar de confianza antes de hacer cualquier otra cosa.",
     },
   },
-  {
-    id: 6,
-    isScam: true,
-    sender: { en: "PayPal Support", es: "Soporte de PayPal" },
-    message: {
-      en: "PayPal: Your account has been suspended due to unusual activity. Verify your information within 24 hours to restore access: paypal-account-verify.net/restore",
-      es: "PayPal: Tu cuenta ha sido suspendida por actividad inusual. Verifica tu información dentro de 24 horas para restaurar el acceso: paypal-account-verify.net/restore",
-    },
-    redFlags: {
-      en: [
-        "Fake domain — real PayPal uses paypal.com only",
-        "Artificial 24-hour deadline creates panic",
-        "Threatens account suspension to force action",
-        "Asks you to click a link to 'verify' information",
-      ],
-      es: [
-        "Dominio falso — el PayPal real solo usa paypal.com",
-        "El plazo artificial de 24 horas crea pánico",
-        "Amenaza con suspensión de cuenta para forzarte a actuar",
-        "Te pide que hagas clic en un enlace para 'verificar' información",
-      ],
-    },
-    distractor: {
-      en: "The message mentions your account has unusual activity",
-      es: "El mensaje menciona que tu cuenta tiene actividad inusual",
-    },
-    sageExplanation: {
-      en: "PayPal will NEVER send you to a site other than paypal.com. Scammers copy the look of real companies. If you are worried, open your browser and type paypal.com yourself — never click the link in the message.",
-      es: "PayPal NUNCA te enviará a un sitio que no sea paypal.com. Los estafadores copian la apariencia de empresas reales. Si te preocupa, abre tu navegador y escribe paypal.com tú misma — nunca hagas clic en el enlace del mensaje.",
-    },
-  },
 ];
+
+// Always sort by displayOrder to guarantee stable gameplay and dropdown order
+export const SORTED_SCAM_LEVELS = [...SCAM_LEVELS].sort((a, b) => a.displayOrder - b.displayOrder);

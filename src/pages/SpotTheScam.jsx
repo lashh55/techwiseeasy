@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronLeft } from 'lucide-react';
 import { useLanguage } from '@/lib/i18n';
 import { base44 } from '@/api/base44Client';
-import { SCAM_LEVELS } from '@/lib/scamLevels';
+import { SORTED_SCAM_LEVELS as SCAM_LEVELS } from '@/lib/scamLevels';
 import TextMessageBubble from '@/components/game/TextMessageBubble';
 import EmailBubble from '@/components/game/EmailBubble';
 import PhoneCallBubble from '@/components/game/PhoneCallBubble';
