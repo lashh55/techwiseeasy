@@ -634,6 +634,42 @@ export const SCAM_LEVELS = [
     },
   },
   {
+    id: 18,
+    displayOrder: 18,
+    isScam: true,
+    isPrivateMessageThread: true,
+    contactName: 'Robert Mills',
+    messages: [
+      "Good morning beautiful. I think about you the moment I wake up. I have never felt this way so quickly. 💕",
+      "I wish I could call you, but the oil rig has terrible signal. Soon, my love. We will be together soon.",
+      "My darling, I have a problem. Customs is holding my equipment and I cannot get paid until I clear the fee. I am so embarrassed to ask — could you send $1,800 in gift cards? I will pay you back the moment I am home to you.",
+    ],
+    scenario: {
+      en: "You met Robert online a few weeks ago. He is loving and attentive, says he works on an oil rig overseas, and talks about a future together — but he has never video called you or met you in person. Now he is asking for money.",
+      es: "Conociste a Robert en línea hace unas semanas. Es cariñoso y atento, dice que trabaja en una plataforma petrolera en el extranjero, y habla de un futuro juntos — pero nunca te ha llamado por video ni te ha conocido en persona. Ahora te está pidiendo dinero.",
+    },
+    redFlags: {
+      en: [
+        "He asks you for money, and specifically for gift cards",
+        "He has never video called you or met you in person",
+        "He says he loves you very quickly, before you have really met",
+      ],
+      es: [
+        "Te pide dinero, y específicamente tarjetas de regalo",
+        "Nunca te ha llamado por video ni te ha conocido en persona",
+        "Dice que te ama muy rápido, antes de que realmente se hayan conocido",
+      ],
+    },
+    distractor: {
+      en: "He says he works on an oil rig",
+      es: "Dice que trabaja en una plataforma petrolera",
+    },
+    sageExplanation: {
+      en: "This is a romance scam, and it is one of the most painful — because it works by winning your heart first. Scammers say 'I love you' fast, always have a reason they cannot video call or meet, and eventually invent an emergency that needs money. The oil rig, the soldier overseas, the doctor on a mission — these are common cover stories chosen because they explain the distance. Here is the rule that protects you: never send money or gift cards to someone you have not met in person, no matter how strong the feelings are. Real love is patient and will never pressure you to pay. If someone you have only met online asks for money, it is a scam — and you deserved better than that.",
+      es: "Esta es una estafa romántica, y es una de las más dolorosas — porque funciona ganándose tu corazón primero. Los estafadores dicen 'te amo' rápido, siempre tienen una razón por la que no pueden hacer videollamadas ni conocerte, y eventualmente inventan una emergencia que necesita dinero. La plataforma petrolera, el soldado en el extranjero, el médico en una misión — estas son historias comunes elegidas porque explican la distancia. Esta es la regla que te protege: nunca envíes dinero ni tarjetas de regalo a alguien que no hayas conocido en persona, sin importar cuán fuertes sean los sentimientos. El amor real es paciente y nunca te presionará para que pagues. Si alguien que solo conociste en línea te pide dinero, es una estafa — y merecías algo mejor.",
+    },
+  },
+  {
     id: 15,
     displayOrder: 15,
     isScam: true,
