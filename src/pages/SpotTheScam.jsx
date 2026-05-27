@@ -9,6 +9,7 @@ import TextMessageBubble from '@/components/game/TextMessageBubble';
 import EmailBubble from '@/components/game/EmailBubble';
 import PhoneCallBubble from '@/components/game/PhoneCallBubble';
 import ComputerPopupBubble from '@/components/game/ComputerPopupBubble';
+import EmailBossChallenge from '@/components/game/EmailBossChallenge';
 import RedFlagSelector from '@/components/game/RedFlagSelector';
 import RealReasons from '@/components/game/RealReasons';
 import SageFeedback from '@/components/game/SageFeedback';
@@ -38,6 +39,7 @@ export default function SpotTheScam() {
 
   const level = SCAM_LEVELS[levelIndex];
   const isBoss = !!level.isBossChallenge;
+  const isEmailBoss = !!level.isEmailBossChallenge;
   // For boss, use current sub-email; for regular, use level directly
   const activeLevel = isBoss ? level.emails[bossEmailIndex] : level;
   const sender = activeLevel.sender?.[lang] || activeLevel.sender?.en || '';
@@ -114,6 +116,35 @@ export default function SpotTheScam() {
       setSessionDone(true);
     }
   };
+
+  // Email Boss Challenge — self-contained rapid-fire component
+  if (isEmailBoss) {
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-navy via-brand-blue to-navy flex flex-col overflow-y-auto">
+        <div className="flex items-center justify-between px-4 pt-4 pb-2 flex-shrink-0">
+          <button
+            onClick={() => navigate('/home')}
+            className="flex items-center gap-1 text-white/80 hover:text-white min-h-[48px] min-w-[60px] transition-colors"
+          >
+            <ChevronLeft className="w-6 h-6" />
+            <span className="text-lg font-semibold">{lang === 'es' ? 'Salir' : 'Exit'}</span>
+          </button>
+          <div className="flex items-center gap-1 bg-white/10 px-3 py-1.5 rounded-full">
+            <span className="text-gold font-black text-base">⭐ {totalPoints}</span>
+          </div>
+        </div>
+        <EmailBossChallenge
+          key={`ebc-${levelIndex}-${attempt}`}
+          level={level}
+          onComplete={(pts) => {
+            setTotalPoints(prev => prev + (pts || 0));
+            advanceLevel();
+          }}
+          onRetry={() => setAttempt(prev => prev + 1)}
+        />
+      </div>
+    );
+  }
 
   if (bossDone) {
     return (
@@ -192,7 +223,7 @@ export default function SpotTheScam() {
           >
             {SCAM_LEVELS.map((lvl, i) => (
             <option key={i} value={i} className="bg-navy text-white">
-              {lvl.displayOrder}. {lvl.isBossChallenge ? '🏆 Boss Challenge' : lvl.isPhoneCall ? `📞 ID ${lvl.id}` : lvl.isComputerPopup ? `💻 ID ${lvl.id}` : `ID ${lvl.id} — ${lvl.sender?.en || ''}`}
+              {lvl.displayOrder}. {lvl.isBossChallenge ? '🏆 Boss Challenge' : lvl.isEmailBossChallenge ? '🏆 Email Boss Challenge' : lvl.isPhoneCall ? `📞 ID ${lvl.id}` : lvl.isComputerPopup ? `💻 ID ${lvl.id}` : `ID ${lvl.id} — ${lvl.sender?.en || ''}`}
             </option>
             ))}
           </select>
