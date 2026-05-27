@@ -9,6 +9,7 @@ import TextMessageBubble from '@/components/game/TextMessageBubble';
 import EmailBubble from '@/components/game/EmailBubble';
 import PhoneCallBubble from '@/components/game/PhoneCallBubble';
 import ComputerPopupBubble from '@/components/game/ComputerPopupBubble';
+import ComputerPopupButtonBubble from '@/components/game/ComputerPopupButtonBubble';
 import EmailBossChallenge from '@/components/game/EmailBossChallenge';
 import RedFlagSelector from '@/components/game/RedFlagSelector';
 import RealReasons from '@/components/game/RealReasons';
@@ -223,7 +224,7 @@ export default function SpotTheScam() {
           >
             {SCAM_LEVELS.map((lvl, i) => (
             <option key={i} value={i} className="bg-navy text-white">
-              {lvl.displayOrder}. {lvl.isBossChallenge ? '🏆 Boss Challenge' : lvl.isEmailBossChallenge ? '🏆 Email Boss Challenge' : lvl.isPhoneCall ? (lvl.id === 13 ? `ID ${lvl.id} — Social Security Call` : `ID ${lvl.id} — Grandparent Scam`) : lvl.isComputerPopup ? `ID ${lvl.id} — Fake Virus Pop-Up` : `ID ${lvl.id} — ${lvl.sender?.en || ''}`}
+              {lvl.displayOrder}. {lvl.isBossChallenge ? '🏆 Boss Challenge' : lvl.isEmailBossChallenge ? '🏆 Email Boss Challenge' : lvl.isPhoneCall ? (lvl.id === 13 ? `ID ${lvl.id} — Social Security Call` : `ID ${lvl.id} — Grandparent Scam`) : lvl.isComputerPopupButton ? `ID ${lvl.id} — Fake Virus Link` : lvl.isComputerPopup ? `ID ${lvl.id} — Fake Virus Pop-Up` : `ID ${lvl.id} — ${lvl.sender?.en || ''}`}
             </option>
             ))}
           </select>
@@ -270,7 +271,11 @@ export default function SpotTheScam() {
               transition={{ duration: 0.3 }}
               className="flex flex-col items-center gap-5 px-5 py-4"
             >
-              {activeLevel.isComputerPopup
+              {activeLevel.isComputerPopupButton
+                ? <ComputerPopupButtonBubble
+                    scenario={activeLevel.scenario?.[lang] || activeLevel.scenario?.en}
+                  />
+                : activeLevel.isComputerPopup
                 ? <ComputerPopupBubble
                     scenario={activeLevel.scenario?.[lang] || activeLevel.scenario?.en}
                   />
@@ -287,7 +292,7 @@ export default function SpotTheScam() {
 
               {/* Instructions */}
               <p className="text-white/80 font-semibold text-base text-center">
-                {activeLevel.isComputerPopup
+                {(activeLevel.isComputerPopup || activeLevel.isComputerPopupButton)
                   ? (lang === 'es' ? 'Esto es...' : 'This is...')
                   : activeLevel.isPhoneCall
                     ? (lang === 'es' ? 'Esta llamada es...' : 'This call is...')

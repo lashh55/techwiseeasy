@@ -576,6 +576,36 @@ export const SCAM_LEVELS = [
     },
   },
   {
+    id: 16,
+    displayOrder: 16,
+    isScam: true,
+    isComputerPopupButton: true,
+    scenario: {
+      en: "A warning pops up on your screen saying your computer is infected. Instead of a phone number, it shows a button that says 'Scan and Remove Virus.' The pop-up warns that closing the page could cause data loss.",
+      es: "Una advertencia aparece en tu pantalla diciendo que tu computadora está infectada. En lugar de un número de teléfono, muestra un botón que dice 'Escanear y eliminar virus.' La ventana emergente advierte que cerrar la página podría causar pérdida de datos.",
+    },
+    redFlags: {
+      en: [
+        "It pressures you to click a button right now to fix a problem",
+        "It threatens that closing the page will cause data loss",
+        "A real virus warning does not appear as a pop-up in your web browser",
+      ],
+      es: [
+        "Te presiona para que hagas clic en un botón ahora mismo para solucionar un problema",
+        "Amenaza con que cerrar la página causará pérdida de datos",
+        "Una advertencia real de virus no aparece como ventana emergente en tu navegador web",
+      ],
+    },
+    distractor: {
+      en: "The pop-up mentions Microsoft by name",
+      es: "La ventana emergente menciona a Microsoft por nombre",
+    },
+    sageExplanation: {
+      en: "This is the other kind of fake virus scam. There's no phone number this time — just a button. But that button is the trap. Clicking it can install harmful software that locks you out of your own computer or quietly copies your passwords and keystrokes as you type. Your web browser cannot actually scan your computer for viruses, so any pop-up that claims to is fake. Never click inside a pop-up like this — not even the X to close it, because the X can be fake too. Instead, close the whole browser, or restart your computer. When in doubt, shut it down. A scam can't hurt you on a computer that's turned off.",
+      es: "Este es el otro tipo de estafa de virus falso. Esta vez no hay número de teléfono — solo un botón. Pero ese botón es la trampa. Hacer clic en él puede instalar software dañino que te bloquea el acceso a tu propia computadora o copia silenciosamente tus contraseñas y pulsaciones de teclas mientras escribes. Tu navegador web no puede realmente escanear tu computadora en busca de virus, así que cualquier ventana emergente que lo afirme es falsa. Nunca hagas clic dentro de una ventana emergente como esta — ni siquiera en la X para cerrarla, porque la X también puede ser falsa. En cambio, cierra todo el navegador o reinicia tu computadora. En caso de duda, apágala. Una estafa no puede hacerte daño en una computadora que está apagada.",
+    },
+  },
+  {
     id: 15,
     displayOrder: 15,
     isScam: true,
