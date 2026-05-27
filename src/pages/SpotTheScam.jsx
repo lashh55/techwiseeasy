@@ -191,9 +191,9 @@ export default function SpotTheScam() {
             className="bg-white/10 text-white text-xs font-bold rounded-lg px-2 py-1 border border-white/20 outline-none cursor-pointer"
           >
             {SCAM_LEVELS.map((lvl, i) => (
-              <option key={i} value={i} className="bg-navy text-white">
-                {i + 1}. {lvl.isBossChallenge ? '🏆 Boss Challenge' : lvl.isPhoneCall ? `📞 ID ${lvl.id}` : lvl.isComputerPopup ? `💻 ID ${lvl.id}` : `ID ${lvl.id} — ${lvl.sender?.en || ''}`}
-              </option>
+            <option key={i} value={i} className="bg-navy text-white">
+              {lvl.displayOrder}. {lvl.isBossChallenge ? '🏆 Boss Challenge' : lvl.isPhoneCall ? `📞 ID ${lvl.id}` : lvl.isComputerPopup ? `💻 ID ${lvl.id}` : `ID ${lvl.id} — ${lvl.sender?.en || ''}`}
+            </option>
             ))}
           </select>
         </div>

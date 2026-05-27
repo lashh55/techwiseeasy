@@ -387,8 +387,43 @@ export const SCAM_LEVELS = [
     },
   },
   {
-    id: 11,
+    id: 10,
     displayOrder: 11,
+    isScam: true,
+    sender: { en: "Geek Squad Protection", es: "Geek Squad Protection" },
+    senderEmail: "geeksquad@protection-billing-center.com",
+    subject: {
+      en: "Your Geek Squad Total Protection Plan Has Renewed — $429.99",
+      es: "Tu Plan de Protección Total de Geek Squad Ha Sido Renovado — $429.99",
+    },
+    message: {
+      en: "Dear Valued Member,\n\nThank you for renewing your Geek Squad Total Protection annual plan. This email confirms your subscription has been successfully renewed.\n\nAmount Charged: $429.99\nBilling Date: May 27, 2026\nPayment Method: Card ending on file\n\nIf you did not authorize this renewal, or you wish to cancel for a FULL REFUND, you must call our Billing Department within 24 hours at 1-888-555-0162.\n\nFailure to call within 24 hours will make this charge final and non-refundable.\n\nGeek Squad Billing Team",
+      es: "Estimado Miembro,\n\nGracias por renovar su plan anual de Protección Total de Geek Squad. Este correo confirma que su suscripción ha sido renovada exitosamente.\n\nCargo: $429.99\nFecha de Facturación: 27 de mayo de 2026\nMétodo de Pago: Tarjeta registrada en archivo\n\nSi usted no autorizó esta renovación, o desea cancelar para obtener un REEMBOLSO COMPLETO, debe llamar a nuestro Departamento de Facturación dentro de las 24 horas al 1-888-555-0162.\n\nNo llamar dentro de las 24 horas hará que este cargo sea final e irrembolsable.\n\nEquipo de Facturación de Geek Squad",
+    },
+    redFlags: {
+      en: [
+        "Pressures you to call a phone number quickly to cancel or get a refund",
+        "Uses a 24-hour deadline to rush your decision",
+        "The sender's email is not an official Best Buy or Geek Squad address",
+      ],
+      es: [
+        "Te presiona a llamar rápidamente a un número de teléfono para cancelar o recibir un reembolso",
+        "Usa un plazo de 24 horas para apresurarte",
+        "El correo del remitente no es una dirección oficial de Best Buy o Geek Squad",
+      ],
+    },
+    distractor: {
+      en: "The email lists a specific dollar amount",
+      es: "El correo indica una cantidad específica en dólares",
+    },
+    sageExplanation: {
+      en: "This is a subscription renewal scam — one of the most common email scams today. The scammers want that big charge to make you panic and call the number. The moment you call, they'll try to get your card details or talk you into letting them onto your computer to 'process a refund' — and that is the real trap. A real company would never make a refund depend on calling within 24 hours. If a charge ever worries you, don't use the number in the email — look up the company's real number yourself, or check your bank statement directly. When an email rushes you to call, slow down. That hurry IS the scam.",
+      es: "Esta es una estafa de renovación de suscripción — una de las estafas por correo más comunes hoy en día. Los estafadores quieren que ese gran cargo te haga entrar en pánico y llamar al número. En el momento en que llamas, intentarán obtener los detalles de tu tarjeta o convencerte de que les dejes acceder a tu computadora para 'procesar un reembolso' — y esa es la trampa real. Una empresa real nunca haría que un reembolso dependiera de llamar dentro de 24 horas. Si algún cargo te preocupa, no uses el número del correo — busca tú misma el número real de la empresa, o revisa tu estado de cuenta directamente. Cuando un correo te apresura a llamar, frena. Esa prisa ES la estafa.",
+    },
+  },
+  {
+    id: 13,
+    displayOrder: 13,
     isScam: true,
     isPhoneCall: true,
     callerName: { en: "Social Security Administration", es: "Administración del Seguro Social" },
@@ -419,8 +454,8 @@ export const SCAM_LEVELS = [
     },
   },
   {
-    id: 12,
-    displayOrder: 12,
+    id: 14,
+    displayOrder: 14,
     isScam: true,
     isComputerPopup: true,
     scenario: {
