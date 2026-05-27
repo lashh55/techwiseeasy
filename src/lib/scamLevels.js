@@ -551,8 +551,8 @@ export const SCAM_LEVELS = [
     isScam: true,
     isComputerPopup: true,
     scenario: {
-      en: "A loud alarm pop-up appears on your screen. A person calls back and asks to remotely access your computer to fix the virus.",
-      es: "Una ventana emergente con una alarma fuerte aparece en tu pantalla. Una persona te llama de vuelta y pide acceso remoto a tu computadora para arreglar el virus.",
+      en: "You're reading an article online when a loud alarm pop-up suddenly fills your screen. It says 'VIRUS DETECTED' and warns you not to close the window. It tells you to call Microsoft Support immediately at the number shown. If you call that number, the person who answers will ask to remotely access your computer to 'remove the virus.'",
+      es: "Estás leyendo un artículo en línea cuando una ventana emergente con una alarma fuerte de repente llena tu pantalla. Dice 'VIRUS DETECTADO' y te advierte que no cierres la ventana. Te indica que llames a Microsoft Support de inmediato al número que se muestra. Si llamas a ese número, la persona que contesta pedirá acceso remoto a tu computadora para 'eliminar el virus.'",
     },
     redFlags: {
       en: [
@@ -571,8 +571,8 @@ export const SCAM_LEVELS = [
       es: "La ventana emergente aparece mientras navegas por internet",
     },
     sageExplanation: {
-      en: "Microsoft never contacts you this way. Never allow anyone to remotely access your computer unless you personally initiated the contact AND you fully trust the source. Even individuals posing as legitimate professionals have been known to exploit remote access to steal personal information or install harmful software. When in doubt, close the browser, restart your computer, and call a trusted family member before doing anything else.",
-      es: "Microsoft nunca te contacta de esta manera. Nunca permitas que nadie acceda remotamente a tu computadora a menos que tú hayas iniciado el contacto Y confíes plenamente en la fuente. Incluso personas que se hacen pasar por profesionales legítimos han utilizado el acceso remoto para robar información personal o instalar software dañino. En caso de duda, cierra el navegador, reinicia tu computadora y llama a un familiar de confianza antes de hacer cualquier otra cosa.",
+      en: "This is a tech support scam. The pop-up is fake — a real virus warning never tells you to call a phone number. The whole goal is to scare you into calling, and once you do, the scammer asks to control your computer from far away. The moment they have access, they can see your passwords, your bank accounts, and your personal files. Real companies like Microsoft will never put a phone number in a pop-up. If a scary alert like this appears, do not call the number and do not panic — close the browser, or shut the computer down and restart it. The alarm is the scam.",
+      es: "Esta es una estafa de soporte técnico. La ventana emergente es falsa — una advertencia real de virus nunca te dice que llames a un número de teléfono. El objetivo es asustarte para que llames, y una vez que lo haces, el estafador pide controlar tu computadora desde lejos. En el momento en que tienen acceso, pueden ver tus contraseñas, tus cuentas bancarias y tus archivos personales. Las empresas reales como Microsoft nunca pondrán un número de teléfono en una ventana emergente. Si aparece una alerta aterradora como esta, no llames al número y no te asustes — cierra el navegador, o apaga la computadora y reiníciala. La alarma es la estafa.",
     },
   },
   {
