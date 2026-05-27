@@ -223,7 +223,7 @@ export default function SpotTheScam() {
           >
             {SCAM_LEVELS.map((lvl, i) => (
             <option key={i} value={i} className="bg-navy text-white">
-              {lvl.displayOrder}. {lvl.isBossChallenge ? '🏆 Boss Challenge' : lvl.isEmailBossChallenge ? '🏆 Email Boss Challenge' : lvl.isPhoneCall ? `📞 ID ${lvl.id}` : lvl.isComputerPopup ? `💻 ID ${lvl.id}` : `ID ${lvl.id} — ${lvl.sender?.en || ''}`}
+              {lvl.displayOrder}. {lvl.isBossChallenge ? '🏆 Boss Challenge' : lvl.isEmailBossChallenge ? '🏆 Email Boss Challenge' : lvl.isPhoneCall ? `ID ${lvl.id} — Social Security Call` : lvl.isComputerPopup ? `ID ${lvl.id} — Fake Virus Pop-Up` : `ID ${lvl.id} — ${lvl.sender?.en || ''}`}
             </option>
             ))}
           </select>
