@@ -606,6 +606,34 @@ export const SCAM_LEVELS = [
     },
   },
   {
+    id: 17,
+    displayOrder: 17,
+    isScam: true,
+    isFacebookPost: true,
+    pageName: 'Riverside RV Center',
+    postText: "🎉 CONGRATULATIONS! 🎉 We have 3 brand-new 2024 motorhomes we cannot sell and must give away THIS WEEK! To claim yours, you must: 1) Like and Share this post, 2) Comment 'ME', and 3) Send us a private message with your name, address, and date of birth to arrange free delivery. Only 3 left — claim now before they're gone!",
+    redFlags: {
+      en: [
+        "It asks you to send personal information like your address and date of birth in a private message",
+        "It pressures you with 'only 3 left' and 'claim now' to make you rush",
+        "A real business does not give away expensive items for liking and sharing a post",
+      ],
+      es: [
+        "Te pide que envíes información personal como tu dirección y fecha de nacimiento en un mensaje privado",
+        "Te presiona con 'solo quedan 3' y 'reclama ahora' para que actúes rápido",
+        "Un negocio real no regala artículos caros por darle 'Me gusta' y compartir una publicación",
+      ],
+    },
+    distractor: {
+      en: "The page has a checkmark next to its name",
+      es: "La página tiene una marca de verificación junto a su nombre",
+    },
+    sageExplanation: {
+      en: "This is a fake giveaway scam. No real company gives away motorhomes — or cars, or campers — just for liking and sharing a post. The 'prize' is bait. Once you send a private message, the scammer either steals the personal information you gave them, or tells you to pay a 'delivery fee' or 'taxes' to receive a prize that does not exist. Your date of birth and address are exactly what someone needs to steal your identity, so never send those to claim anything online. If a giveaway sounds too good to be true, it is — every time.",
+      es: "Esta es una estafa de sorteo falso. Ninguna empresa real regala casas rodantes — ni autos, ni campers — solo por darle 'Me gusta' y compartir una publicación. El 'premio' es el anzuelo. Una vez que envías un mensaje privado, el estafador roba la información personal que le diste, o te dice que pagues una 'tarifa de entrega' o 'impuestos' para recibir un premio que no existe. Tu fecha de nacimiento y dirección son exactamente lo que alguien necesita para robar tu identidad, así que nunca las envíes para reclamar nada en línea. Si un sorteo suena demasiado bueno para ser verdad, lo es — siempre.",
+    },
+  },
+  {
     id: 15,
     displayOrder: 15,
     isScam: true,
