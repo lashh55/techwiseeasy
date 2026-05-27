@@ -20,11 +20,11 @@ const avatars = [
 
 export default function AvatarSelection({ onNext, avatarValue, nameValue, onAvatarChange, onNameChange }) {
   const { t, lang } = useLanguage();
-  const [selectedAvatar, setSelectedAvatar] = useState(avatarValue || 'a1');
+  const [selectedAvatar, setSelectedAvatar] = useState(avatarValue || null);
   const [name, setName] = useState(nameValue || '');
   const [showPrompt, setShowPrompt] = useState(false);
 
-  const canProceed = name.trim().length >= 2;
+  const canProceed = selectedAvatar !== null && name.trim().length >= 2;
 
   const handleAvatarSelect = (id) => {
     setSelectedAvatar(id);
@@ -82,7 +82,14 @@ export default function AvatarSelection({ onNext, avatarValue, nameValue, onAvat
           placeholder={t('avatar_name_placeholder')}
           className="w-full px-5 py-4 rounded-2xl bg-white/10 border-2 border-white/20 text-white text-xl font-semibold placeholder:text-white/50 focus:outline-none focus:border-gold transition-all min-h-[64px]"
         />
-        {showPrompt && !canProceed && (
+        {showPrompt && !selectedAvatar && (
+          <p className="text-yellow-300 text-sm font-bold text-center mt-2">
+            {lang === 'es'
+              ? 'Por favor toca la foto que te gustaría usar.'
+              : 'Please tap the picture you\'d like to use.'}
+          </p>
+        )}
+        {showPrompt && selectedAvatar && name.trim().length < 2 && (
           <p className="text-yellow-300 text-sm font-bold text-center mt-2">
             {lang === 'es'
               ? '¡Por favor dile tu nombre a Sage para que pueda saludarte personalmente!'
