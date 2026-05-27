@@ -575,6 +575,38 @@ export const SCAM_LEVELS = [
       es: "Microsoft nunca te contacta de esta manera. Nunca permitas que nadie acceda remotamente a tu computadora a menos que tú hayas iniciado el contacto Y confíes plenamente en la fuente. Incluso personas que se hacen pasar por profesionales legítimos han utilizado el acceso remoto para robar información personal o instalar software dañino. En caso de duda, cierra el navegador, reinicia tu computadora y llama a un familiar de confianza antes de hacer cualquier otra cosa.",
     },
   },
+  {
+    id: 15,
+    displayOrder: 15,
+    isScam: true,
+    isPhoneCall: true,
+    callerName: { en: "Unknown Caller", es: "Llamada Desconocida" },
+    callerNumber: "1-407-555-0188",
+    scenario: {
+      en: "You answer the phone. A young man's voice says 'Grandma? It's me!' He sounds upset and says he's been in a car accident in another state and is in jail. He begs you not to tell his parents because he's embarrassed. He says a lawyer will call you next and you need to send $2,500 for bail money right away — by gift cards or a wire transfer.",
+      es: "Contestas el teléfono. Una voz joven dice '¿Abuela? ¡Soy yo!' Suena angustiado y dice que tuvo un accidente de auto en otro estado y está en la cárcel. Te ruega que no se lo digas a sus padres porque está avergonzado. Dice que un abogado te llamará enseguida y que necesitas enviar $2,500 para la fianza de inmediato — con tarjetas de regalo o una transferencia bancaria.",
+    },
+    redFlags: {
+      en: [
+        "He asks you to send money by gift cards or wire transfer",
+        "He pressures you to act right away and send money fast",
+        "He begs you to keep it secret and not call his parents",
+      ],
+      es: [
+        "Te pide que envíes dinero con tarjetas de regalo o transferencia bancaria",
+        "Te presiona para que actúes de inmediato y envíes dinero rápido",
+        "Te ruega que guardes el secreto y no llames a sus padres",
+      ],
+    },
+    distractor: {
+      en: "The caller sounds like he is crying or upset",
+      es: "El llamante suena como si estuviera llorando o angustiado",
+    },
+    sageExplanation: {
+      en: "This is the grandparent scam, and it works by scaring you before you can think. Two things give it away every time. First — real emergencies are not paid for with gift cards. No jail, lawyer, or hospital will ever ask for gift cards. Second — the scammer tells you to keep it secret so you won't call the one person who could stop you. So do exactly that: hang up and call your grandchild or their parents directly on a number you already have. You will almost always find your grandchild safe at home. When someone says 'don't tell anyone,' that is your signal to tell someone.",
+      es: "Esta es la estafa del abuelo, y funciona asustándote antes de que puedas pensar. Dos cosas la delatan siempre. Primero — las emergencias reales no se pagan con tarjetas de regalo. Ninguna cárcel, abogado ni hospital pedirá jamás tarjetas de regalo. Segundo — el estafador te dice que guardes el secreto para que no llames a la única persona que podría detenerte. Así que haz exactamente eso: cuelga y llama a tu nieto o a sus padres directamente a un número que ya tengas. Casi siempre encontrarás a tu nieto sano y salvo en casa. Cuando alguien dice 'no le digas a nadie,' esa es tu señal para decírselo a alguien.",
+    },
+  },
 ];
 
 // Always sort by displayOrder to guarantee stable gameplay and dropdown order
