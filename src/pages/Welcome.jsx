@@ -11,6 +11,7 @@ export default function Welcome() {
   const { t } = useLanguage();
 
   const handleSkipToGame = async () => {
+    localStorage.setItem('twe_test_mode', 'true');
     const records = await base44.entities.UserProgress.list();
     if (!records || records.length === 0) {
       await base44.entities.UserProgress.create({

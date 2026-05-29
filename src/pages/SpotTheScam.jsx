@@ -21,7 +21,7 @@ import BossChallengeComplete from '@/components/game/BossChallengeComplete';
 
 // Phase: 'question' | 'redflags' | 'realreasons' | 'feedback' | 'complete'
 
-const isPreview = typeof window !== 'undefined' && window.self !== window.top;
+const isTestMode = typeof window !== 'undefined' && localStorage.getItem('twe_test_mode') === 'true';
 
 export default function SpotTheScam() {
   const { lang } = useLanguage();
@@ -102,8 +102,12 @@ export default function SpotTheScam() {
     }
   };
 
-  const advanceLevel = async () => {
+  const advanceLevel = async (extraPoints = 0) => {
+    const pts = totalPoints + extraPoints;
     if (levelIndex < SCAM_LEVELS.length - 1) {
+      if (extraPoints > 0) setTotalPoints(pts);
+      setBossEmailIndex(0);
+      setBossDone(false);
       setLevelIndex(prev => prev + 1);
       setPhase('question');
       setAttempt(1);
@@ -113,7 +117,7 @@ export default function SpotTheScam() {
       if (records && records.length > 0) {
         const current = records[0];
         await base44.entities.UserProgress.update(current.id, {
-          wisdom_points: (current.wisdom_points || 0) + totalPoints,
+          wisdom_points: (current.wisdom_points || 0) + pts,
         });
       }
       setSessionDone(true);
@@ -140,8 +144,7 @@ export default function SpotTheScam() {
           key={`ebc-${levelIndex}-${attempt}`}
           level={level}
           onComplete={(pts) => {
-            setTotalPoints(prev => prev + (pts || 0));
-            advanceLevel();
+            advanceLevel(pts || 0);
           }}
           onRetry={() => setAttempt(prev => prev + 1)}
         />
@@ -153,7 +156,7 @@ export default function SpotTheScam() {
     return (
       <BossChallengeComplete
         totalPoints={bossPoints}
-        onClaim={advanceLevel}
+        onClaim={() => advanceLevel()}
       />
     );
   }
@@ -207,8 +210,8 @@ export default function SpotTheScam() {
         </div>
       </div>
 
-      {/* Preview-only jump control */}
-      {isPreview && (
+      {/* Test-mode-only jump control */}
+      {isTestMode && (
         <div className="flex items-center justify-center gap-2 px-4 pb-1">
           <span className="text-white/40 text-xs font-bold">🛠 Jump:</span>
           <select
