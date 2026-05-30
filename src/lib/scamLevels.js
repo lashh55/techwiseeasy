@@ -516,6 +516,7 @@ export const SCAM_LEVELS = [
   {
     id: 13,
     displayOrder: 13,
+    section: 'phone',
     isScam: true,
     isPhoneCall: true,
     callerName: { en: "Social Security Administration", es: "Administración del Seguro Social" },
@@ -548,6 +549,7 @@ export const SCAM_LEVELS = [
   {
     id: 14,
     displayOrder: 14,
+    section: 'tech_support',
     isScam: true,
     isComputerPopup: true,
     scenario: {
@@ -578,6 +580,7 @@ export const SCAM_LEVELS = [
   {
     id: 16,
     displayOrder: 16,
+    section: 'tech_support',
     isScam: true,
     isComputerPopupButton: true,
     scenario: {
@@ -608,6 +611,7 @@ export const SCAM_LEVELS = [
   {
     id: 17,
     displayOrder: 17,
+    section: 'social_media',
     isScam: true,
     isFacebookPost: true,
     pageName: 'Riverside RV Center',
@@ -636,6 +640,7 @@ export const SCAM_LEVELS = [
   {
     id: 18,
     displayOrder: 18,
+    section: 'romance',
     isScam: true,
     isPrivateMessageThread: true,
     contactName: 'Robert Mills',
@@ -672,6 +677,7 @@ export const SCAM_LEVELS = [
   {
     id: 15,
     displayOrder: 15,
+    section: 'phone',
     isScam: true,
     isPhoneCall: true,
     callerName: { en: "Unknown Caller", es: "Llamada Desconocida" },

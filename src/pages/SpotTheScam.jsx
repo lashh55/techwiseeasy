@@ -30,27 +30,79 @@ import BossMissedReview from '@/components/game/BossMissedReview.jsx';
 
 const isTestMode = typeof window !== 'undefined' && localStorage.getItem('twe_test_mode') === 'true';
 
-// Returns section label info for a given level (displayOrder-based)
-function getSectionLabel(level, lang) {
+// Derive a level's section key from its properties
+function getLevelSection(level) {
+  if (level.isBossChallenge) return 'text_boss';
+  if (level.isEmailBossChallenge) return 'email_boss';
+  if (level.isPhoneBossChallenge) return 'phone_boss';
+  if (level.section) return level.section;
+  // Fall back to displayOrder for text and email scams (no explicit section tag needed)
   const d = level.displayOrder;
-  if (level.isBossChallenge) return { section: lang === 'es' ? '🏆 Reto Final de Texto' : '🏆 Text Scam Boss Challenge', sub: null };
-  if (level.isEmailBossChallenge) return { section: lang === 'es' ? '🏆 Reto Final de Correos' : '🏆 Email Boss Challenge', sub: null };
-  if (level.isPhoneBossChallenge) return { section: lang === 'es' ? '🏆 Reto Final de Llamadas' : '🏆 Phone Boss Challenge', sub: null };
-  if (d >= 1 && d <= 5) return { section: lang === 'es' ? 'Estafa de Texto' : 'Text Scam', sectionIndex: d, sectionTotal: 5 };
-  if (d >= 7 && d <= 11) return { section: lang === 'es' ? 'Estafa de Correo' : 'Email Scam', sectionIndex: d - 6, sectionTotal: 5 };
-  // Phone scams: displayOrders 13–17
-  if (d >= 13 && d <= 17) return { section: lang === 'es' ? 'Estafa Telefónica' : 'Phone Scam', sectionIndex: d - 12, sectionTotal: 5 };
-  // Tech-support scams: displayOrders 19–20
-  if (d === 19 || d === 20) {
-    const idx = d === 19 ? 1 : 2;
-    return { section: lang === 'es' ? 'Estafa de Soporte Técnico' : 'Tech-Support Scam', sectionIndex: idx, sectionTotal: 2 };
+  if (d >= 1 && d <= 5) return 'text';
+  if (d >= 7 && d <= 11) return 'email';
+  return 'text';
+}
+
+// Build a section → sorted levels map (excluding boss challenges) for counting
+function buildSectionMap(allLevels) {
+  const map = {};
+  allLevels.forEach(lvl => {
+    const sec = getLevelSection(lvl);
+    if (!['text_boss','email_boss','phone_boss'].includes(sec)) {
+      if (!map[sec]) map[sec] = [];
+      map[sec].push(lvl);
+    }
+  });
+  return map;
+}
+
+const SECTION_MAP = buildSectionMap(SCAM_LEVELS);
+
+// Returns section label info for a given level
+function getSectionLabel(level, lang) {
+  const sec = getLevelSection(level);
+
+  if (sec === 'text_boss') return { section: lang === 'es' ? '🏆 Reto Final de Texto' : '🏆 Text Scam Boss Challenge', sub: null };
+  if (sec === 'email_boss') return { section: lang === 'es' ? '🏆 Reto Final de Correos' : '🏆 Email Boss Challenge', sub: null };
+  if (sec === 'phone_boss') return { section: lang === 'es' ? '🏆 Reto Final de Llamadas' : '🏆 Phone Boss Challenge', sub: null };
+
+  const sectionLevels = SECTION_MAP[sec] || [];
+  const sectionIndex = sectionLevels.findIndex(l => l.id === level.id) + 1;
+  const sectionTotal = sectionLevels.length;
+
+  const sectionNames = {
+    text:         lang === 'es' ? 'Estafa de Texto'            : 'Text Scam',
+    email:        lang === 'es' ? 'Estafa de Correo'           : 'Email Scam',
+    phone:        lang === 'es' ? 'Estafa Telefónica'          : 'Phone Scam',
+    tech_support: lang === 'es' ? 'Estafa de Soporte Técnico'  : 'Tech-Support Scam',
+    social_media: lang === 'es' ? 'Estafa en Redes Sociales'   : 'Social Media Scam',
+    romance:      lang === 'es' ? 'Estafa Romántica'           : 'Romance Scam',
+  };
+
+  return {
+    section: sectionNames[sec] || 'Quick Quiz',
+    sectionIndex,
+    sectionTotal,
+  };
+}
+
+// Returns the appropriate question phrasing above the REAL/SCAM buttons
+function getQuestionPhrase(level, lang) {
+  const sec = getLevelSection(level);
+  if (lang === 'es') {
+    if (sec === 'phone') return 'Esta llamada es...';
+    if (sec === 'tech_support') return 'Esta ventana emergente es...';
+    if (sec === 'social_media') return 'Esta publicación es...';
+    if (sec === 'romance') return 'Esto es...';
+    if (sec === 'email') return 'Este correo es...';
+    return 'Este mensaje es...';
   }
-  // Social media scams: displayOrders 21–22
-  if (d === 21 || d === 22) {
-    const idx = d === 21 ? 1 : 2;
-    return { section: lang === 'es' ? 'Estafa en Redes Sociales' : 'Social Media Scam', sectionIndex: idx, sectionTotal: 2 };
-  }
-  return { section: lang === 'es' ? 'Quiz Rápido' : 'Quick Quiz', sectionIndex: d, sectionTotal: null };
+  if (sec === 'phone') return 'This call is...';
+  if (sec === 'tech_support') return 'This pop-up is...';
+  if (sec === 'social_media') return 'This post is...';
+  if (sec === 'romance') return 'This is...';
+  if (sec === 'email') return 'This email is...';
+  return 'This message is...';
 }
 
 export default function SpotTheScam() {
@@ -379,11 +431,8 @@ export default function SpotTheScam() {
           return (
             <>
               <p className="text-gold font-black text-sm tracking-wide uppercase">
-                {lang === 'es' ? 'Quiz Rápido' : 'Quick Quiz'}
-              </p>
-              <p className="text-white/60 font-bold text-sm">
                 {lbl.sectionTotal
-                  ? `${lbl.section} ${lbl.sectionIndex} of ${lbl.sectionTotal}`
+                  ? `${lbl.section} ${lbl.sectionIndex} ${lang === 'es' ? 'de' : 'of'} ${lbl.sectionTotal}`
                   : lbl.section}
               </p>
               <h2 className="text-white font-black text-xl">
@@ -443,14 +492,7 @@ export default function SpotTheScam() {
 
               {/* Instructions */}
               <p className="text-white/80 font-semibold text-base text-center">
-                {activeLevel.isPrivateMessageThread
-                  ? (lang === 'es' ? 'Esto es...' : 'This is...')
-                  : (activeLevel.isComputerPopup || activeLevel.isComputerPopupButton || activeLevel.isFacebookPost)
-                  ? (lang === 'es' ? 'Esta publicación es...' : 'This post is...')
-                  : activeLevel.isPhoneCall
-                    ? (lang === 'es' ? 'Esta llamada es...' : 'This call is...')
-                    : (lang === 'es' ? 'Este mensaje es...' : 'This message is...')
-                }
+                {getQuestionPhrase(activeLevel, lang)}
               </p>
 
               {/* REAL / SCAM buttons */}

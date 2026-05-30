@@ -71,9 +71,9 @@ export default function Welcome() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.4 }}
-          className="text-center space-y-3"
+          className="text-center space-y-3 w-full flex flex-col items-center"
         >
-          <p className="text-2xl font-bold text-white leading-snug">
+          <p className="text-lg font-bold text-white leading-snug text-center whitespace-nowrap">
             {t('welcome_tagline')}
           </p>
           <p className="text-lg font-semibold text-gold">
