@@ -18,10 +18,34 @@ import RealReasons from '@/components/game/RealReasons';
 import SageFeedback from '@/components/game/SageFeedback';
 import SessionComplete from '@/components/game/SessionComplete';
 import BossChallengeComplete from '@/components/game/BossChallengeComplete';
+import BossReviewScreen from '@/components/game/BossReviewScreen.jsx';
+import BossMissedReview from '@/components/game/BossMissedReview.jsx';
 
 // Phase: 'question' | 'redflags' | 'realreasons' | 'feedback' | 'complete'
 
 const isTestMode = typeof window !== 'undefined' && localStorage.getItem('twe_test_mode') === 'true';
+
+// Returns section label info for a given level (displayOrder-based)
+function getSectionLabel(level, lang) {
+  const d = level.displayOrder;
+  if (level.isBossChallenge) return { section: lang === 'es' ? '🏆 Reto Final de Texto' : '🏆 Text Scam Boss Challenge', sub: null };
+  if (level.isEmailBossChallenge) return { section: lang === 'es' ? '🏆 Reto Final de Correos' : '🏆 Email Boss Challenge', sub: null };
+  if (d >= 1 && d <= 5) return { section: lang === 'es' ? 'Estafa de Texto' : 'Text Scam', sectionIndex: d, sectionTotal: 5 };
+  if (d >= 7 && d <= 11) return { section: lang === 'es' ? 'Estafa de Correo' : 'Email Scam', sectionIndex: d - 6, sectionTotal: 5 };
+  if (d === 13 || d === 15) {
+    const idx = d === 13 ? 1 : 2;
+    return { section: lang === 'es' ? 'Estafa Telefónica' : 'Phone Scam', sectionIndex: idx, sectionTotal: 2 };
+  }
+  if (d === 14 || d === 16) {
+    const idx = d === 14 ? 1 : 2;
+    return { section: lang === 'es' ? 'Estafa de Soporte Técnico' : 'Tech-Support Scam', sectionIndex: idx, sectionTotal: 2 };
+  }
+  if (d === 17 || d === 18) {
+    const idx = d === 17 ? 1 : 2;
+    return { section: lang === 'es' ? 'Estafa en Redes Sociales' : 'Social Media Scam', sectionIndex: idx, sectionTotal: 2 };
+  }
+  return { section: lang === 'es' ? 'Quiz Rápido' : 'Quick Quiz', sectionIndex: d, sectionTotal: null };
+}
 
 export default function SpotTheScam() {
   const { lang } = useLanguage();
@@ -39,6 +63,8 @@ export default function SpotTheScam() {
   const [bossEmailIndex, setBossEmailIndex] = useState(0);
   const [bossDone, setBossDone] = useState(false);
   const [bossPoints, setBossPoints] = useState(0);
+  const [bossAnswers, setBossAnswers] = useState([]); // track per-email correctness for review
+  const [bossScreen, setBossScreen] = useState('complete'); // 'complete' | 'review' | 'missed'
 
   const level = SCAM_LEVELS[levelIndex];
   const isBoss = !!level.isBossChallenge;
@@ -68,6 +94,8 @@ export default function SpotTheScam() {
     } else {
       setPhase('feedback');
     }
+    // Record answer for boss review
+    if (isBoss) setBossAnswers(prev => [...prev, { correct }]);
   };
 
   const handleFeedbackContinue = () => {
@@ -96,6 +124,7 @@ export default function SpotTheScam() {
         setIsCorrect(false);
       } else {
         setBossDone(true);
+        setBossScreen('review');
       }
     } else {
       advanceLevel();
@@ -108,6 +137,8 @@ export default function SpotTheScam() {
       if (extraPoints > 0) setTotalPoints(pts);
       setBossEmailIndex(0);
       setBossDone(false);
+      setBossAnswers([]);
+      setBossScreen('complete');
       setLevelIndex(prev => prev + 1);
       setPhase('question');
       setAttempt(1);
@@ -153,6 +184,40 @@ export default function SpotTheScam() {
   }
 
   if (bossDone) {
+    if (bossScreen === 'review') {
+      return (
+        <div className="min-h-screen bg-gradient-to-b from-navy via-brand-blue to-navy flex flex-col overflow-y-auto">
+          <BossReviewScreen
+            emails={level.emails}
+            answers={bossAnswers}
+            onShowMissed={() => setBossScreen('missed')}
+            onTryAgain={() => {
+              setBossEmailIndex(0);
+              setBossAnswers([]);
+              setBossPoints(0);
+              setBossDone(false);
+              setBossScreen('complete');
+              setPhase('question');
+              setAttempt(1);
+              setIsCorrect(false);
+            }}
+            onSkipToBadge={() => advanceLevel()}
+          />
+        </div>
+      );
+    }
+    if (bossScreen === 'missed') {
+      const missedIndices = bossAnswers.map((a, i) => (!a.correct ? i : null)).filter(i => i !== null);
+      return (
+        <div className="min-h-screen bg-gradient-to-b from-navy via-brand-blue to-navy flex flex-col overflow-y-auto">
+          <BossMissedReview
+            emails={level.emails}
+            missedIndices={missedIndices}
+            onDone={() => advanceLevel()}
+          />
+        </div>
+      );
+    }
     return (
       <BossChallengeComplete
         totalPoints={bossPoints}
@@ -224,6 +289,8 @@ export default function SpotTheScam() {
               setIsCorrect(false);
               setBossEmailIndex(0);
               setBossDone(false);
+              setBossAnswers([]);
+              setBossScreen('complete');
             }}
             className="bg-white/10 text-white text-xs font-bold rounded-lg px-2 py-1 border border-white/20 outline-none cursor-pointer"
           >
@@ -238,28 +305,34 @@ export default function SpotTheScam() {
 
       {/* Level label */}
       <div className="text-center px-6 pt-1 pb-2 flex-shrink-0">
-        {isBoss ? (
-          <>
-            <p className="text-gold font-black text-sm tracking-wide uppercase">
-              {lang === 'es' ? '🏆 Reto Final' : '🏆 Boss Challenge'}
-            </p>
-            <h2 className="text-white font-black text-lg leading-tight">
-              {lang === 'es' ? `Correo ${bossEmailIndex + 1} de ${level.emails.length}` : `Email ${bossEmailIndex + 1} of ${level.emails.length}`}
-            </h2>
-          </>
-        ) : (
-          <>
-            <p className="text-gold font-black text-sm tracking-wide uppercase">
-              {lang === 'es' ? 'Quiz Rápido' : 'Quick Quiz'}
-            </p>
-            <p className="text-white/60 font-bold text-sm">
-              {lang === 'es' ? `Nivel ${levelIndex + 1} de ${SCAM_LEVELS.length}` : `Level ${levelIndex + 1} of ${SCAM_LEVELS.length}`}
-            </p>
-            <h2 className="text-white font-black text-xl">
-              {lang === 'es' ? '¿Real o Fraude?' : 'Real or Scam?'}
-            </h2>
-          </>
-        )}
+        {(() => {
+          const lbl = getSectionLabel(level, lang);
+          if (isBoss) {
+            return (
+              <>
+                <p className="text-gold font-black text-sm tracking-wide uppercase">{lbl.section}</p>
+                <h2 className="text-white font-black text-lg leading-tight">
+                  {lang === 'es' ? `Correo ${bossEmailIndex + 1} de ${level.emails.length}` : `Email ${bossEmailIndex + 1} of ${level.emails.length}`}
+                </h2>
+              </>
+            );
+          }
+          return (
+            <>
+              <p className="text-gold font-black text-sm tracking-wide uppercase">
+                {lang === 'es' ? 'Quiz Rápido' : 'Quick Quiz'}
+              </p>
+              <p className="text-white/60 font-bold text-sm">
+                {lbl.sectionTotal
+                  ? `${lbl.section} ${lbl.sectionIndex} of ${lbl.sectionTotal}`
+                  : lbl.section}
+              </p>
+              <h2 className="text-white font-black text-xl">
+                {lang === 'es' ? '¿Real o Fraude?' : 'Real or Scam?'}
+              </h2>
+            </>
+          );
+        })()}
         {attempt === 2 && (
           <p className="text-yellow-300 font-bold text-sm mt-0.5">
             {lang === 'es' ? '¡Intento 2! Piénsalo bien...' : 'Try 2! Think it through...'}
