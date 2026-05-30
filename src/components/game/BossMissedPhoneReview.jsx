@@ -1,0 +1,86 @@
+import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useLanguage } from '@/lib/i18n';
+import { IMAGES } from '@/lib/images';
+import PhoneCallBubble from '@/components/game/PhoneCallBubble';
+
+// Shows each missed phone call one at a time with Sage's explanation, then calls onDone.
+export default function BossMissedPhoneReview({ calls, missedIndices, onDone }) {
+  const { lang } = useLanguage();
+  const [pos, setPos] = useState(0);
+
+  if (missedIndices.length === 0) {
+    onDone();
+    return null;
+  }
+
+  const currentIdx = missedIndices[pos];
+  const call = calls[currentIdx];
+  const isLast = pos === missedIndices.length - 1;
+
+  const callerName = call.callerName?.[lang] || call.callerName?.en || '';
+  const scenario = call.scenario?.[lang] || call.scenario?.en || '';
+  const explanation = call.sageExplanation?.[lang] || call.sageExplanation?.en || '';
+
+  const verdict = call.isScam
+    ? (lang === 'es' ? '🚨 Esta llamada era un FRAUDE' : '🚨 This call was a SCAM')
+    : (lang === 'es' ? '✅ Esta llamada era REAL' : '✅ This call was REAL');
+
+  return (
+    <div className="flex flex-col items-center px-5 py-4 gap-4 w-full overflow-y-auto">
+      <div className="text-center">
+        <p className="text-gold font-black text-xs tracking-wide uppercase">
+          {lang === 'es'
+            ? `Revisando fallo ${pos + 1} de ${missedIndices.length}`
+            : `Reviewing miss ${pos + 1} of ${missedIndices.length}`}
+        </p>
+        <p className="text-white/60 font-bold text-sm">
+          {lang === 'es' ? `Llamada ${currentIdx + 1}` : `Call ${currentIdx + 1}`}
+        </p>
+      </div>
+
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={pos}
+          initial={{ opacity: 0, x: 40 }}
+          animate={{ opacity: 1, x: 0 }}
+          exit={{ opacity: 0, x: -40 }}
+          transition={{ duration: 0.25 }}
+          className="w-full flex flex-col gap-4"
+        >
+          <PhoneCallBubble
+            callerName={callerName}
+            callerNumber={call.callerNumber}
+            scenario={scenario}
+          />
+
+          {/* Verdict */}
+          <div className={`w-full rounded-2xl px-5 py-3 text-center font-black text-lg ${
+            call.isScam
+              ? 'bg-red-500/20 border-2 border-red-400 text-red-200'
+              : 'bg-green-500/20 border-2 border-green-400 text-green-200'
+          }`}>
+            {verdict}
+          </div>
+
+          {/* Sage explanation */}
+          {explanation && (
+            <div className="flex items-start gap-3 bg-white rounded-3xl p-4 shadow-lg w-full">
+              <img src={IMAGES.sage_full} alt="Sage" className="w-10 h-14 object-contain flex-shrink-0" />
+              <p className="text-navy text-sm font-semibold leading-relaxed">{explanation}</p>
+            </div>
+          )}
+        </motion.div>
+      </AnimatePresence>
+
+      <button
+        onClick={() => { if (isLast) onDone(); else setPos(p => p + 1); }}
+        className="w-full max-w-sm py-5 bg-gold text-navy font-black text-xl rounded-2xl shadow-lg hover:bg-yellow-400 active:scale-[0.98] transition-all mt-2"
+      >
+        {isLast
+          ? (lang === 'es' ? 'RECLAMAR MI INSIGNIA →' : 'CLAIM MY BADGE →')
+          : (lang === 'es' ? 'Siguiente →' : 'Next →')}
+      </button>
+    </div>
+  );
+}

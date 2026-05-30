@@ -13,6 +13,8 @@ import ComputerPopupButtonBubble from '@/components/game/ComputerPopupButtonBubb
 import FacebookPostBubble from '@/components/game/FacebookPostBubble';
 import PrivateMessageThreadBubble from '@/components/game/PrivateMessageThreadBubble';
 import EmailBossChallenge from '@/components/game/EmailBossChallenge';
+import PhoneBossChallenge from '@/components/game/PhoneBossChallenge.jsx';
+import PhoneBossChallengeComplete from '@/components/game/PhoneBossChallengeComplete.jsx';
 import RedFlagSelector from '@/components/game/RedFlagSelector';
 import RealReasons from '@/components/game/RealReasons';
 import SageFeedback from '@/components/game/SageFeedback';
@@ -30,18 +32,19 @@ function getSectionLabel(level, lang) {
   const d = level.displayOrder;
   if (level.isBossChallenge) return { section: lang === 'es' ? '🏆 Reto Final de Texto' : '🏆 Text Scam Boss Challenge', sub: null };
   if (level.isEmailBossChallenge) return { section: lang === 'es' ? '🏆 Reto Final de Correos' : '🏆 Email Boss Challenge', sub: null };
+  if (level.isPhoneBossChallenge) return { section: lang === 'es' ? '🏆 Reto Final de Llamadas' : '🏆 Phone Boss Challenge', sub: null };
   if (d >= 1 && d <= 5) return { section: lang === 'es' ? 'Estafa de Texto' : 'Text Scam', sectionIndex: d, sectionTotal: 5 };
   if (d >= 7 && d <= 11) return { section: lang === 'es' ? 'Estafa de Correo' : 'Email Scam', sectionIndex: d - 6, sectionTotal: 5 };
-  if (d === 13 || d === 15) {
-    const idx = d === 13 ? 1 : 2;
-    return { section: lang === 'es' ? 'Estafa Telefónica' : 'Phone Scam', sectionIndex: idx, sectionTotal: 2 };
-  }
-  if (d === 14 || d === 16) {
-    const idx = d === 14 ? 1 : 2;
+  // Phone scams: displayOrders 13–17
+  if (d >= 13 && d <= 17) return { section: lang === 'es' ? 'Estafa Telefónica' : 'Phone Scam', sectionIndex: d - 12, sectionTotal: 5 };
+  // Tech-support scams: displayOrders 19–20
+  if (d === 19 || d === 20) {
+    const idx = d === 19 ? 1 : 2;
     return { section: lang === 'es' ? 'Estafa de Soporte Técnico' : 'Tech-Support Scam', sectionIndex: idx, sectionTotal: 2 };
   }
-  if (d === 17 || d === 18) {
-    const idx = d === 17 ? 1 : 2;
+  // Social media scams: displayOrders 21–22
+  if (d === 21 || d === 22) {
+    const idx = d === 21 ? 1 : 2;
     return { section: lang === 'es' ? 'Estafa en Redes Sociales' : 'Social Media Scam', sectionIndex: idx, sectionTotal: 2 };
   }
   return { section: lang === 'es' ? 'Quiz Rápido' : 'Quick Quiz', sectionIndex: d, sectionTotal: null };
@@ -69,6 +72,7 @@ export default function SpotTheScam() {
   const level = SCAM_LEVELS[levelIndex];
   const isBoss = !!level.isBossChallenge;
   const isEmailBoss = !!level.isEmailBossChallenge;
+  const isPhoneBoss = !!level.isPhoneBossChallenge;
   // For boss, use current sub-email; for regular, use level directly
   const activeLevel = isBoss ? level.emails[bossEmailIndex] : level;
   const sender = activeLevel.sender?.[lang] || activeLevel.sender?.en || '';
@@ -154,6 +158,43 @@ export default function SpotTheScam() {
       setSessionDone(true);
     }
   };
+
+  // Phone Boss Challenge — self-contained rapid-fire component
+  if (isPhoneBoss) {
+    if (bossDone) {
+      return (
+        <PhoneBossChallengeComplete
+          totalPoints={bossPoints}
+          onClaim={() => advanceLevel()}
+        />
+      );
+    }
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-navy via-brand-blue to-navy flex flex-col overflow-y-auto">
+        <div className="flex items-center justify-between px-4 pt-4 pb-2 flex-shrink-0">
+          <button
+            onClick={() => navigate('/game-menu')}
+            className="flex items-center gap-1 text-white/80 hover:text-white min-h-[48px] min-w-[60px] transition-colors"
+          >
+            <ChevronLeft className="w-6 h-6" />
+            <span className="text-lg font-semibold">{lang === 'es' ? 'Salir' : 'Exit'}</span>
+          </button>
+          <div className="flex items-center gap-1 bg-white/10 px-3 py-1.5 rounded-full">
+            <span className="text-gold font-black text-base">⭐ {totalPoints}</span>
+          </div>
+        </div>
+        <PhoneBossChallenge
+          key={`pbc-${levelIndex}-${attempt}`}
+          level={level}
+          onComplete={(pts) => {
+            setBossDone(true);
+            setBossPoints(pts || 0);
+          }}
+          onRetry={() => setAttempt(prev => prev + 1)}
+        />
+      </div>
+    );
+  }
 
   // Email Boss Challenge — self-contained rapid-fire component
   if (isEmailBoss) {
@@ -296,7 +337,7 @@ export default function SpotTheScam() {
           >
             {SCAM_LEVELS.map((lvl, i) => (
             <option key={i} value={i} className="bg-navy text-white">
-              {lvl.displayOrder}. {lvl.isBossChallenge ? '🏆 Boss Challenge' : lvl.isEmailBossChallenge ? '🏆 Email Boss Challenge' : lvl.isPhoneCall ? (lvl.id === 13 ? `ID ${lvl.id} — Social Security Call` : `ID ${lvl.id} — Grandparent Scam`) : lvl.isComputerPopupButton ? `ID ${lvl.id} — Fake Virus Link` : lvl.isComputerPopup ? `ID ${lvl.id} — Fake Virus Pop-Up` : lvl.isFacebookPost ? `ID ${lvl.id} — Facebook Giveaway` : lvl.isPrivateMessageThread ? `ID ${lvl.id} — Romance Scam` : `ID ${lvl.id} — ${lvl.sender?.en || ''}`}
+              {lvl.displayOrder}. {lvl.isBossChallenge ? '🏆 Text Boss Challenge' : lvl.isEmailBossChallenge ? '🏆 Email Boss Challenge' : lvl.isPhoneBossChallenge ? '🏆 Phone Boss Challenge' : lvl.isPhoneCall ? `ID ${lvl.id} — ${lvl.callerName?.en || 'Phone Call'}` : lvl.isComputerPopupButton ? `ID ${lvl.id} — Fake Virus Link` : lvl.isComputerPopup ? `ID ${lvl.id} — Fake Virus Pop-Up` : lvl.isFacebookPost ? `ID ${lvl.id} — Facebook Giveaway` : lvl.isPrivateMessageThread ? `ID ${lvl.id} — Romance Scam` : `ID ${lvl.id} — ${lvl.sender?.en || ''}`}
             </option>
             ))}
           </select>
