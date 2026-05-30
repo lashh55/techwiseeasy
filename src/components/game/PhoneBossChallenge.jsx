@@ -4,6 +4,7 @@ import { useLanguage } from '@/lib/i18n';
 import PhoneCallBubble from '@/components/game/PhoneCallBubble';
 import BossReviewScreen from '@/components/game/BossReviewScreen.jsx';
 import BossMissedPhoneReview from '@/components/game/BossMissedPhoneReview.jsx';
+import { useScreenAudio } from '@/hooks/useScreenAudio';
 
 // Rapid-fire phone boss challenge — 10 calls, tap REAL or SCAM
 export default function PhoneBossChallenge({ level, onComplete, onRetry }) {
@@ -40,6 +41,13 @@ export default function PhoneBossChallenge({ level, onComplete, onRetry }) {
   const totalPoints = correctCount * 10;
   const missedIndices = answers.map((a, i) => (!a.correct ? i : null)).filter(i => i !== null);
 
+  // Must be before early returns — always call hooks unconditionally
+  const currentScenario = calls[callIndex]?.scenario?.[lang] || calls[callIndex]?.scenario?.en || '';
+  useScreenAudio(
+    () => screen === 'playing' ? `${lang === 'es' ? 'Esta llamada es...' : 'This call is...'} ${currentScenario}` : '',
+    [callIndex, lang, screen]
+  );
+
   if (screen === 'review') {
     return (
       <div className="min-h-screen bg-gradient-to-b from-navy via-brand-blue to-navy flex flex-col overflow-y-auto">
@@ -67,7 +75,7 @@ export default function PhoneBossChallenge({ level, onComplete, onRetry }) {
   }
 
   const callerName = current.callerName?.[lang] || current.callerName?.en || '';
-  const scenario = current.scenario?.[lang] || current.scenario?.en || '';
+  const scenario = currentScenario;
 
   return (
     <div className="flex flex-col items-center gap-4 px-5 py-3 w-full">

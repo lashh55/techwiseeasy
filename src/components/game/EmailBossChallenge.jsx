@@ -5,6 +5,7 @@ import { IMAGES } from '@/lib/images';
 import EmailBubble from '@/components/game/EmailBubble';
 import BossReviewScreen from '@/components/game/BossReviewScreen.jsx';
 import BossMissedReview from '@/components/game/BossMissedReview.jsx';
+import { useScreenAudio } from '@/hooks/useScreenAudio';
 
 // Rapid-fire email boss challenge — 10 emails, tap REAL or SCAM
 // Pass threshold: 8/10 correct
@@ -45,6 +46,17 @@ export default function EmailBossChallenge({ level, onComplete, onRetry }) {
   const totalPoints = correctCount * 10;
   const missedIndices = answers.map((a, i) => (!a.correct ? i : null)).filter(i => i !== null);
 
+  // Must be before early returns — always call hooks unconditionally
+  const currentSender = emails[emailIndex]?.sender?.[lang] || emails[emailIndex]?.sender?.en || '';
+  const currentSubject = emails[emailIndex]?.subject?.[lang] || emails[emailIndex]?.subject?.en || '';
+  const currentMessage = emails[emailIndex]?.message?.[lang] || emails[emailIndex]?.message?.en || '';
+  useScreenAudio(
+    () => screen === 'playing'
+      ? `${lang === 'es' ? 'Este correo es...' : 'This email is...'} From ${currentSender}. Subject: ${currentSubject}. ${currentMessage}`
+      : '',
+    [emailIndex, lang, screen]
+  );
+
   // Review screen — offer three choices
   if (screen === 'review') {
     return (
@@ -74,9 +86,9 @@ export default function EmailBossChallenge({ level, onComplete, onRetry }) {
   }
 
   // Playing
-  const sender = current.sender?.[lang] || current.sender?.en;
-  const subject = current.subject?.[lang] || current.subject?.en;
-  const message = current.message?.[lang] || current.message?.en;
+  const sender = currentSender;
+  const subject = currentSubject;
+  const message = currentMessage;
 
   return (
     <div className="flex flex-col items-center gap-4 px-5 py-3 w-full">

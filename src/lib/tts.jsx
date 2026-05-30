@@ -2,52 +2,85 @@ import React, { createContext, useContext, useState, useEffect, useRef, useCallb
 
 const TTSContext = createContext(null);
 
-// Pick the best available female English voice
-function pickVoice(lang) {
-  if (typeof window === 'undefined' || !window.speechSynthesis) return null;
-  const voices = window.speechSynthesis.getVoices();
-  if (!voices.length) return null;
+// Quality-first voice picker matching the specified priority order
+function pickVoice(voices, lang) {
+  if (!voices || !voices.length) return null;
 
-  const langCode = lang === 'es' ? 'es' : 'en';
+  const isEs = lang === 'es';
+  const targetLang = isEs ? 'es' : 'en';
 
-  // Prefer natural-sounding female voices by name heuristics
-  const femaleKeywords = ['samantha', 'karen', 'moira', 'fiona', 'victoria', 'zira', 'susan', 'female', 'woman', 'aria', 'jenny', 'siri'];
-  const langVoices = voices.filter(v => v.lang.toLowerCase().startsWith(langCode));
+  // Priority keywords — higher-quality voices on modern browsers/OS
+  const qualityKeywords = ['natural', 'online', 'enhanced', 'premium', 'neural', 'aria', 'jenny', 'samantha', 'allison', 'microsoft'];
+  // Female name heuristics as secondary filter
+  const femaleKeywords = ['samantha', 'karen', 'moira', 'fiona', 'victoria', 'zira', 'susan', 'female', 'woman', 'aria', 'jenny', 'allison', 'siri', 'ava', 'kate', 'nicky', 'tessa', 'serena'];
 
-  // Try to find a named female voice
-  const female = langVoices.find(v =>
-    femaleKeywords.some(k => v.name.toLowerCase().includes(k))
-  );
-  if (female) return female;
+  const langVoices = voices.filter(v => v.lang.toLowerCase().startsWith(targetLang));
+  const enUSVoices = voices.filter(v => v.lang.toLowerCase() === (isEs ? 'es-us' : 'en-us'));
 
-  // Fallback: first US English voice
-  const usVoice = langVoices.find(v => v.lang === (lang === 'es' ? 'es-US' : 'en-US'));
-  if (usVoice) return usVoice;
+  // 1. High-quality female en-US voice
+  const bestFemale = enUSVoices.find(v => {
+    const name = v.name.toLowerCase();
+    return qualityKeywords.some(k => name.includes(k)) && femaleKeywords.some(k => name.includes(k));
+  });
+  if (bestFemale) return bestFemale;
 
-  // Fallback: any matching lang voice
+  // 2. Any high-quality en-US voice (may be female)
+  const bestEnUS = enUSVoices.find(v => qualityKeywords.some(k => v.name.toLowerCase().includes(k)));
+  if (bestEnUS) return bestEnUS;
+
+  // 3. Any high-quality voice in the target language
+  const bestLang = langVoices.find(v => qualityKeywords.some(k => v.name.toLowerCase().includes(k)));
+  if (bestLang) return bestLang;
+
+  // 4. Any female en-US voice
+  const anyFemaleEnUS = enUSVoices.find(v => femaleKeywords.some(k => v.name.toLowerCase().includes(k)));
+  if (anyFemaleEnUS) return anyFemaleEnUS;
+
+  // 5. Any en-US voice
+  if (enUSVoices.length) return enUSVoices[0];
+
+  // 6. Any voice in target language
   if (langVoices.length) return langVoices[0];
 
-  // Last resort: any voice
+  // 7. Absolute fallback
   return voices[0] || null;
 }
 
 export function TTSProvider({ children }) {
-  // muted = user's temporary in-session toggle (does not save to DB)
   const [muted, setMuted] = useState(false);
-  // enabled = from UserProgress.audio_narration
   const [enabled, setEnabled] = useState(false);
-  const [voicesReady, setVoicesReady] = useState(false);
+  // Store selected voice object once voices load
+  const voiceRef = useRef(null);
   const langRef = useRef('en');
+  const enabledRef = useRef(false);
+  const mutedRef = useRef(false);
 
-  // Load voices (Chrome loads them async)
+  // Keep refs in sync so speak() never has stale closure values
+  useEffect(() => { enabledRef.current = enabled; }, [enabled]);
+  useEffect(() => { mutedRef.current = muted; }, [muted]);
+
+  // Load voices — Chrome fires voiceschanged asynchronously
   useEffect(() => {
     if (typeof window === 'undefined' || !window.speechSynthesis) return;
-    const load = () => setVoicesReady(true);
-    if (window.speechSynthesis.getVoices().length > 0) {
-      setVoicesReady(true);
-    } else {
-      window.speechSynthesis.addEventListener('voiceschanged', load);
-      return () => window.speechSynthesis.removeEventListener('voiceschanged', load);
+
+    const selectVoice = () => {
+      const voices = window.speechSynthesis.getVoices();
+      if (voices.length) {
+        voiceRef.current = pickVoice(voices, langRef.current);
+      }
+    };
+
+    selectVoice();
+    window.speechSynthesis.addEventListener('voiceschanged', selectVoice);
+    return () => window.speechSynthesis.removeEventListener('voiceschanged', selectVoice);
+  }, []);
+
+  // Re-select voice when language changes
+  const setLang = useCallback((l) => {
+    langRef.current = l;
+    if (typeof window !== 'undefined' && window.speechSynthesis) {
+      const voices = window.speechSynthesis.getVoices();
+      if (voices.length) voiceRef.current = pickVoice(voices, l);
     }
   }, []);
 
@@ -56,39 +89,39 @@ export function TTSProvider({ children }) {
     window.speechSynthesis.cancel();
   }, []);
 
+  // speak is stable — reads enabled/muted from refs, not closure state
   const speak = useCallback((text, lang) => {
     if (typeof window === 'undefined' || !window.speechSynthesis) return;
-    if (!enabled || muted) return;
-    if (!text) return;
+    if (!enabledRef.current || mutedRef.current) return;
+    if (!text || !text.trim()) return;
 
-    // Cancel any ongoing speech first
+    // Cancel any ongoing speech
     window.speechSynthesis.cancel();
 
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.rate = 0.88;   // slightly slower — easier for seniors
-    utterance.pitch = 1.05;
-    utterance.volume = 1;
+    // Pick voice for this language if different from current
+    let voice = voiceRef.current;
+    if (lang && lang !== langRef.current) {
+      const voices = window.speechSynthesis.getVoices();
+      voice = pickVoice(voices, lang) || voice;
+    }
 
-    const voice = pickVoice(lang || langRef.current);
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.rate = 0.9;    // natural pace, comfortable for seniors
+    utterance.pitch = 1.0;
+    utterance.volume = 1;
     if (voice) utterance.voice = voice;
 
     window.speechSynthesis.speak(utterance);
-  }, [enabled, muted, voicesReady]);
+  }, []); // stable — no deps needed because we use refs
 
   const toggleMute = useCallback(() => {
     setMuted(prev => {
-      if (!prev) {
-        // muting — stop current playback
-        if (typeof window !== 'undefined' && window.speechSynthesis) {
-          window.speechSynthesis.cancel();
-        }
+      if (!prev && typeof window !== 'undefined' && window.speechSynthesis) {
+        window.speechSynthesis.cancel();
       }
       return !prev;
     });
   }, []);
-
-  // Update langRef when called
-  const setLang = useCallback((l) => { langRef.current = l; }, []);
 
   return (
     <TTSContext.Provider value={{ enabled, setEnabled, muted, toggleMute, speak, stop, setLang }}>

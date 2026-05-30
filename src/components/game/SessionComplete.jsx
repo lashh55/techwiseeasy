@@ -2,6 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { IMAGES } from '@/lib/images';
 import { useLanguage } from '@/lib/i18n';
+import { useScreenAudio } from '@/hooks/useScreenAudio';
 
 export default function SessionComplete({ totalPoints, maxPossiblePoints, levelCount, onHome, onReplay }) {
   const { lang } = useLanguage();
@@ -18,10 +19,15 @@ export default function SessionComplete({ totalPoints, maxPossiblePoints, levelC
   const homeLabel = lang === 'es' ? 'IR A INICIO' : 'GO HOME';
 
   const encouragement = percent >= 80
-    ? (lang === 'es' ? '¡Eres una experta en detectar fraudes! 🏆' : 'You\'re a scam-spotting expert! 🏆')
+    ? (lang === 'es' ? '¡Eres una experta en detectar fraudes!' : "You're a scam-spotting expert!")
     : percent >= 50
-    ? (lang === 'es' ? '¡Buen trabajo! Sigue practicando. 💪' : 'Great effort! Keep practicing. 💪')
-    : (lang === 'es' ? '¡Cada intento te hace más sabia! 💜' : 'Every try makes you wiser! 💜');
+    ? (lang === 'es' ? '¡Buen trabajo! Sigue practicando.' : 'Great effort! Keep practicing.')
+    : (lang === 'es' ? '¡Cada intento te hace más sabia!' : 'Every try makes you wiser!');
+
+  useScreenAudio(
+    () => `${headline} ${subtitle} ${encouragement} ${lang === 'es' ? `Ganaste ${totalPoints} puntos.` : `You earned ${totalPoints} points.`}`,
+    [lang, totalPoints]
+  );
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-navy via-brand-blue to-navy flex flex-col items-center justify-between px-6 py-10">

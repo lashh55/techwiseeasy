@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { useLanguage } from '@/lib/i18n';
+import { useScreenAudio } from '@/hooks/useScreenAudio';
 
 export default function BossReviewScreen({ emails, answers, onShowMissed, onTryAgain, onSkipToBadge }) {
   const { lang } = useLanguage();
@@ -19,6 +20,16 @@ export default function BossReviewScreen({ emails, answers, onShowMissed, onTryA
       ? `Fallaste las preguntas ${rest} y ${last}.`
       : `You missed questions ${rest}, and ${last}.`;
   };
+
+  useScreenAudio(
+    () => {
+      const scoreText = lang === 'es'
+        ? `Terminaste. Tuviste ${correctCount} de ${total} correctas. ${getMissedText()}`
+        : `You finished! You got ${correctCount} out of ${total} correct. ${getMissedText()}`;
+      return scoreText;
+    },
+    [lang, correctCount]
+  );
 
   return (
     <motion.div

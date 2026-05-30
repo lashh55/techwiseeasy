@@ -3,28 +3,34 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useLanguage } from '@/lib/i18n';
 import { IMAGES } from '@/lib/images';
 import EmailBubble from '@/components/game/EmailBubble';
+import { useScreenAudio } from '@/hooks/useScreenAudio';
 
 export default function BossMissedReview({ emails, missedIndices, onDone }) {
   const { lang } = useLanguage();
   const [pos, setPos] = useState(0);
+
+  const currentIdx = missedIndices[pos] ?? 0;
+  const email = emails[currentIdx] || {};
+  const explanation = email.sageExplanation?.[lang] || email.sageExplanation?.en || '';
+  const verdict = email.isScam
+    ? (lang === 'es' ? 'Esto era un FRAUDE.' : 'This was a SCAM.')
+    : (lang === 'es' ? 'Esto era REAL.' : 'This was REAL.');
+
+  // Hook must be unconditional — guard empty case with empty string
+  useScreenAudio(
+    () => missedIndices.length > 0 ? `${verdict} ${explanation}` : '',
+    [pos, lang, missedIndices.length]
+  );
 
   if (missedIndices.length === 0) {
     onDone();
     return null;
   }
 
-  const currentIdx = missedIndices[pos];
-  const email = emails[currentIdx];
   const isLast = pos === missedIndices.length - 1;
-
   const sender = email.sender?.[lang] || email.sender?.en || '';
   const subject = email.subject?.[lang] || email.subject?.en || '';
   const message = email.message?.[lang] || email.message?.en || '';
-  const explanation = email.sageExplanation?.[lang] || email.sageExplanation?.en || '';
-
-  const verdict = email.isScam
-    ? (lang === 'es' ? '🚨 Esto era un FRAUDE' : '🚨 This was a SCAM')
-    : (lang === 'es' ? '✅ Esto era REAL' : '✅ This was REAL');
 
   return (
     <div className="flex flex-col items-center px-5 py-4 gap-4 w-full overflow-y-auto">

@@ -3,28 +3,34 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useLanguage } from '@/lib/i18n';
 import { IMAGES } from '@/lib/images';
 import PhoneCallBubble from '@/components/game/PhoneCallBubble';
+import { useScreenAudio } from '@/hooks/useScreenAudio';
 
 // Shows each missed phone call one at a time with Sage's explanation, then calls onDone.
 export default function BossMissedPhoneReview({ calls, missedIndices, onDone }) {
   const { lang } = useLanguage();
   const [pos, setPos] = useState(0);
 
+  const currentIdx = missedIndices[pos] ?? 0;
+  const call = calls[currentIdx] || {};
+  const explanation = call.sageExplanation?.[lang] || call.sageExplanation?.en || '';
+  const verdict = call.isScam
+    ? (lang === 'es' ? 'Esta llamada era un FRAUDE.' : 'This call was a SCAM.')
+    : (lang === 'es' ? 'Esta llamada era REAL.' : 'This call was REAL.');
+
+  // Hook must be unconditional — guard empty case with empty string
+  useScreenAudio(
+    () => missedIndices.length > 0 ? `${verdict} ${explanation}` : '',
+    [pos, lang, missedIndices.length]
+  );
+
   if (missedIndices.length === 0) {
     onDone();
     return null;
   }
 
-  const currentIdx = missedIndices[pos];
-  const call = calls[currentIdx];
   const isLast = pos === missedIndices.length - 1;
-
   const callerName = call.callerName?.[lang] || call.callerName?.en || '';
   const scenario = call.scenario?.[lang] || call.scenario?.en || '';
-  const explanation = call.sageExplanation?.[lang] || call.sageExplanation?.en || '';
-
-  const verdict = call.isScam
-    ? (lang === 'es' ? '🚨 Esta llamada era un FRAUDE' : '🚨 This call was a SCAM')
-    : (lang === 'es' ? '✅ Esta llamada era REAL' : '✅ This call was REAL');
 
   return (
     <div className="flex flex-col items-center px-5 py-4 gap-4 w-full overflow-y-auto">

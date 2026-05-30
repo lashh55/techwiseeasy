@@ -1,17 +1,27 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { IMAGES } from '@/lib/images';
 import { useLanguage } from '@/lib/i18n';
 import { base44 } from '@/api/base44Client';
 import StatsBar from '@/components/home/StatsBar';
-import { useEffect } from 'react';
+import { useSyncTTS } from '@/hooks/useSyncTTS';
+import { useScreenAudio } from '@/hooks/useScreenAudio';
+import TTSButton from '@/components/TTSButton';
 
 export default function GameMenu() {
   const { lang } = useLanguage();
   const navigate = useNavigate();
   const [progress, setProgress] = useState(null);
   const [showComingSoon, setShowComingSoon] = useState(false); // eslint-disable-line no-unused-vars
+
+  useSyncTTS();
+
+  const greeting = progress?.display_name
+    ? (lang === 'es' ? `¡Hola, ${progress.display_name}! ¿Qué quieres practicar hoy?` : `Hi, ${progress.display_name}! What do you want to practice today?`)
+    : (lang === 'es' ? '¿Qué quieres practicar hoy?' : 'What do you want to practice today?');
+
+  useScreenAudio(() => greeting, [greeting]);
 
   useEffect(() => {
     base44.entities.UserProgress.list().then(records => {
@@ -24,7 +34,8 @@ export default function GameMenu() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-navy via-brand-blue to-navy flex flex-col">
       {/* Header */}
-      <div className="px-5 pt-8 pb-4 flex items-center gap-4">
+      <div className="px-5 pt-8 pb-4 flex items-center gap-4 relative">
+        <div className="absolute top-4 right-5"><TTSButton /></div>
         <img src={IMAGES.sage_full} alt="Sage" className="w-16 h-20 object-contain drop-shadow-lg" />
         <div>
           <p className="text-white/80 text-lg font-semibold">

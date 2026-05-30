@@ -1,12 +1,11 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { motion } from 'framer-motion';
 import { IMAGES } from '@/lib/images';
 import { useLanguage } from '@/lib/i18n';
-import { useTTS } from '@/lib/tts';
+import { useScreenAudio } from '@/hooks/useScreenAudio';
 
 export default function SageFeedback({ isCorrect, explanation, onContinue, isScam, hasRedFlags }) {
   const { lang } = useLanguage();
-  const { speak, stop } = useTTS();
 
   const correctMsg = lang === 'es'
     ? '¡Lo detectaste! Eso es exactamente correcto.'
@@ -15,11 +14,11 @@ export default function SageFeedback({ isCorrect, explanation, onContinue, isSca
     ? 'No exactamente — pero por eso practicamos. Déjame explicarte...'
     : 'Not quite — but that\'s exactly why we practice. Let me explain...';
 
-  useEffect(() => {
-    const header = isCorrect ? correctMsg : incorrectMsg;
-    speak(`${header} ${explanation}`, lang);
-    return () => stop();
-  }, []);
+  // Re-fires every time isCorrect or explanation changes (each new feedback screen)
+  useScreenAudio(
+    () => `${isCorrect ? correctMsg : incorrectMsg} ${explanation || ''}`,
+    [isCorrect, explanation, lang]
+  );
 
   const bgClass = isCorrect
     ? 'bg-gradient-to-b from-yellow-400 via-yellow-300 to-amber-200'

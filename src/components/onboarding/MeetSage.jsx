@@ -2,9 +2,11 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { IMAGES } from '@/lib/images';
 import { useLanguage } from '@/lib/i18n';
+import { useScreenAudio } from '@/hooks/useScreenAudio';
 
 export default function MeetSage({ onNext }) {
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
+  useScreenAudio(() => t('meet_sage_speech'), [lang]);
 
   return (
     <div className="flex flex-col items-center justify-between min-h-full px-6 py-8">

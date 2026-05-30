@@ -2,10 +2,18 @@ import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { useLanguage } from '@/lib/i18n';
 import { IMAGES } from '@/lib/images';
+import { useScreenAudio } from '@/hooks/useScreenAudio';
 
 export default function PhoneBossChallengeComplete({ totalPoints, onClaim }) {
   const { lang } = useLanguage();
   const [showBadge, setShowBadge] = useState(false);
+
+  useScreenAudio(
+    () => lang === 'es'
+      ? `¡Experta en Llamadas! Completaste el Reto Final de Llamadas. Ganaste ${totalPoints} puntos.`
+      : `Phone Expert Unlocked! You completed the Phone Boss Challenge. You earned ${totalPoints} points.`,
+    [lang, totalPoints]
+  );
 
   useEffect(() => {
     const t = setTimeout(() => setShowBadge(true), 800);
