@@ -9,6 +9,7 @@ import Welcome from '@/pages/Welcome';
 import Onboarding from '@/pages/Onboarding';
 import Home from '@/pages/Home';
 import GameMenu from '@/pages/GameMenu';
+import StoryCharacterCreation from '@/pages/StoryCharacterCreation';
 import Tutorial from '@/pages/Tutorial';
 import SpotTheScam from '@/pages/SpotTheScam';
 
@@ -22,6 +23,7 @@ function App() {
             <Route path="/onboarding" element={<Onboarding />} />
             <Route path="/home" element={<Home />} />
             <Route path="/game-menu" element={<GameMenu />} />
+            <Route path="/story-character-creation" element={<StoryCharacterCreation />} />
             <Route path="/tutorial" element={<Tutorial />} />
             <Route path="/spot-the-scam" element={<SpotTheScam />} />
             <Route path="*" element={<PageNotFound />} />

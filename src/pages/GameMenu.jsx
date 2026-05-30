@@ -11,7 +11,7 @@ export default function GameMenu() {
   const { lang } = useLanguage();
   const navigate = useNavigate();
   const [progress, setProgress] = useState(null);
-  const [showComingSoon, setShowComingSoon] = useState(false);
+  const [showComingSoon, setShowComingSoon] = useState(false); // eslint-disable-line no-unused-vars
 
   useEffect(() => {
     base44.entities.UserProgress.list().then(records => {
@@ -79,7 +79,7 @@ export default function GameMenu() {
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          onClick={() => setShowComingSoon(true)}
+          onClick={() => navigate('/story-character-creation')}
           className="w-full text-left bg-white rounded-3xl shadow-xl overflow-hidden active:scale-[0.98] transition-transform"
         >
           <div className="bg-gradient-to-r from-sage-purple to-accent px-5 py-4 flex items-center gap-3">

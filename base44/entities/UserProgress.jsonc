@@ -76,6 +76,35 @@
       },
       "default": [],
       "description": "List of earned milestone badge IDs"
+    },
+    "story_avatar_id": {
+      "type": "string",
+      "description": "Avatar chosen for Story Mode character"
+    },
+    "story_name": {
+      "type": "string",
+      "description": "Name chosen for Story Mode character"
+    },
+    "story_profession": {
+      "type": "string",
+      "description": "Profession chosen for Story Mode character"
+    },
+    "story_family": {
+      "type": "string",
+      "description": "Family situation chosen for Story Mode"
+    },
+    "story_living": {
+      "type": "string",
+      "description": "Living situation chosen for Story Mode"
+    },
+    "story_pet": {
+      "type": "string",
+      "description": "Pet chosen for Story Mode"
+    },
+    "story_character_created": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether the player has completed Story Mode character creation"
     }
   },
   "required": []
