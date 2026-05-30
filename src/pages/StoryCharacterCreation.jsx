@@ -44,11 +44,12 @@ export default function StoryCharacterCreation() {
     const records = await base44.entities.UserProgress.list();
     const data = {
       story_avatar_id: character.avatar_id || '',
-      story_name: character.name || '',
+      // Store empty string for skipped fields — storyDefaults.js provides fallbacks at render time
+      story_name: character.name?.trim() || '',
       story_profession: character.profession || '',
       story_family: character.family || '',
       story_living: character.living || '',
-      story_pet: character.pet || '',
+      story_pet: (character.pet && character.pet !== 'Just me') ? character.pet : '',
       story_character_created: true,
     };
     if (records && records.length > 0) {

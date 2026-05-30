@@ -548,7 +548,7 @@ export const SCAM_LEVELS = [
   },
   {
     id: 14,
-    displayOrder: 14,
+    displayOrder: 16,
     section: 'tech_support',
     isScam: true,
     isComputerPopup: true,
@@ -579,7 +579,7 @@ export const SCAM_LEVELS = [
   },
   {
     id: 16,
-    displayOrder: 16,
+    displayOrder: 17,
     section: 'tech_support',
     isScam: true,
     isComputerPopupButton: true,
@@ -610,7 +610,7 @@ export const SCAM_LEVELS = [
   },
   {
     id: 17,
-    displayOrder: 17,
+    displayOrder: 18,
     section: 'social_media',
     isScam: true,
     isFacebookPost: true,
@@ -639,7 +639,7 @@ export const SCAM_LEVELS = [
   },
   {
     id: 18,
-    displayOrder: 18,
+    displayOrder: 19,
     section: 'romance',
     isScam: true,
     isPrivateMessageThread: true,
@@ -676,7 +676,7 @@ export const SCAM_LEVELS = [
   },
   {
     id: 15,
-    displayOrder: 15,
+    displayOrder: 14,
     section: 'phone',
     isScam: true,
     isPhoneCall: true,

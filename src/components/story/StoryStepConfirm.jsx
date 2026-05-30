@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { IMAGES } from '@/lib/images';
+import { storyName, storyProfession, storyPet } from '@/lib/storyDefaults';
 
 const AVATAR_IMAGES = {
   a1: IMAGES.avatar_1,
@@ -18,24 +19,17 @@ const AVATAR_IMAGES = {
 };
 
 export default function StoryStepConfirm({ character, onStart, onBack, saving }) {
-  const displayName = character.name?.trim() || 'Friend';
+  const displayName = storyName(character);
   const avatarImg = character.avatar_id ? AVATAR_IMAGES[character.avatar_id] : null;
+  const profession = storyProfession(character);
+  const pet = storyPet(character);
 
-  // Build summary sentence — only include non-null fields
-  const parts = [];
-  if (character.name?.trim()) parts.push(character.name.trim());
-  if (character.profession) parts.push(`retired ${character.profession.toLowerCase()}`);
-  if (character.family) parts.push(character.family.toLowerCase());
-  if (character.living) parts.push(character.living.toLowerCase());
-  if (character.pet && character.pet !== 'Just me') parts.push(`with a ${character.pet.toLowerCase()}`);
-
-  const summary = parts.length > 0 ? parts.join(', ') + '.' : null;
-
+  // Only include fields that were actually chosen — no filler for skipped fields
   const summaryItems = [
-    character.profession && { label: 'Profession', value: character.profession },
+    profession && { label: 'Profession', value: profession },
     character.family && { label: 'Family', value: character.family },
     character.living && { label: 'Home', value: character.living },
-    character.pet && { label: 'Pet', value: character.pet },
+    pet && { label: 'Pet', value: pet },
   ].filter(Boolean);
 
   return (
