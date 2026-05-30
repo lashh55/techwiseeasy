@@ -54,7 +54,7 @@ export default function Onboarding() {
       current_streak: 0,
       tutorial_complete: false,
     });
-    navigate('/home');
+    navigate('/game-menu');
   };
 
   const updateSetting = (key, value) => {

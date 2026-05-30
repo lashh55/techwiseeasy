@@ -130,7 +130,7 @@ export default function SpotTheScam() {
       <div className="min-h-screen bg-gradient-to-b from-navy via-brand-blue to-navy flex flex-col overflow-y-auto">
         <div className="flex items-center justify-between px-4 pt-4 pb-2 flex-shrink-0">
           <button
-            onClick={() => navigate('/home')}
+            onClick={() => navigate('/game-menu')}
             className="flex items-center gap-1 text-white/80 hover:text-white min-h-[48px] min-w-[60px] transition-colors"
           >
             <ChevronLeft className="w-6 h-6" />
@@ -167,7 +167,7 @@ export default function SpotTheScam() {
         totalPoints={totalPoints}
         maxPossiblePoints={maxPossiblePoints}
         levelCount={SCAM_LEVELS.length}
-        onHome={() => navigate('/home')}
+        onHome={() => navigate('/game-menu')}
         onReplay={() => {
           setLevelIndex(0);
           setPhase('question');
@@ -186,7 +186,7 @@ export default function SpotTheScam() {
       {/* Top bar */}
       <div className="flex items-center justify-between px-4 pt-4 pb-2 flex-shrink-0">
         <button
-          onClick={() => navigate('/home')}
+          onClick={() => navigate('/game-menu')}
           className="flex items-center gap-1 text-white/80 hover:text-white min-h-[48px] min-w-[60px] transition-colors"
         >
           <ChevronLeft className="w-6 h-6" />
@@ -249,8 +249,11 @@ export default function SpotTheScam() {
           </>
         ) : (
           <>
+            <p className="text-gold font-black text-sm tracking-wide uppercase">
+              {lang === 'es' ? 'Quiz Rápido' : 'Quick Quiz'}
+            </p>
             <p className="text-white/60 font-bold text-sm">
-              {lang === 'es' ? `NIVEL ${levelIndex + 1} DE ${SCAM_LEVELS.length}` : `LEVEL ${levelIndex + 1} OF ${SCAM_LEVELS.length}`}
+              {lang === 'es' ? `Nivel ${levelIndex + 1} de ${SCAM_LEVELS.length}` : `Level ${levelIndex + 1} of ${SCAM_LEVELS.length}`}
             </p>
             <h2 className="text-white font-black text-xl">
               {lang === 'es' ? '¿Real o Fraude?' : 'Real or Scam?'}

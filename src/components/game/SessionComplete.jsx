@@ -11,8 +11,8 @@ export default function SessionComplete({ totalPoints, maxPossiblePoints, levelC
 
   const headline = lang === 'es' ? '¡Sesión Completa!' : 'Session Complete!';
   const subtitle = lang === 'es'
-    ? `Completaste los ${levelCount} mensajes de texto`
-    : `You completed all ${levelCount} text messages`;
+    ? `¡Completaste el Quiz Rápido!`
+    : `You completed the Quick Quiz!`;
   const pointsLabel = lang === 'es' ? 'Puntos de Sabiduría Ganados' : 'Wisdom Points Earned';
   const replayLabel = lang === 'es' ? 'JUGAR DE NUEVO' : 'PLAY AGAIN';
   const homeLabel = lang === 'es' ? 'IR A INICIO' : 'GO HOME';

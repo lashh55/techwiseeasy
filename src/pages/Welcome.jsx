@@ -24,7 +24,7 @@ export default function Welcome() {
         earned_badges: [],
       });
     }
-    navigate('/spot-the-scam');
+    navigate('/game-menu');
   };
 
   return (
