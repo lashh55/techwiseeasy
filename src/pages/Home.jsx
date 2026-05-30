@@ -8,10 +8,13 @@ import StatsBar from '@/components/home/StatsBar';
 import GameCard from '@/components/home/GameCard';
 import MilestoneBanner from '@/components/gamification/MilestoneBanner';
 import { checkMilestones } from '@/lib/milestones';
+import { useSyncTTS } from '@/hooks/useSyncTTS';
+import TTSButton from '@/components/TTSButton';
 
 export default function Home() {
   const { t } = useLanguage();
   const navigate = useNavigate();
+  useSyncTTS();
   const [progress, setProgress] = useState(null);
   const [newMilestone, setNewMilestone] = useState(null);
 
@@ -43,6 +46,7 @@ export default function Home() {
     <div className="min-h-screen bg-gradient-to-b from-navy via-brand-blue to-navy flex flex-col">
       {/* Header */}
       <div className="px-5 pt-8 pb-4">
+        <div className="flex justify-end mb-2"><TTSButton /></div>
         <div className="flex items-center gap-4">
           <img src={IMAGES.sage_full} alt="Sage" className="w-16 h-20 object-contain drop-shadow-lg" />
           <div>

@@ -1,9 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronLeft } from 'lucide-react';
 import { useLanguage } from '@/lib/i18n';
 import { base44 } from '@/api/base44Client';
+import { useTTS } from '@/lib/tts';
+import { useSyncTTS } from '@/hooks/useSyncTTS';
+import TTSButton from '@/components/TTSButton';
 import { SORTED_SCAM_LEVELS as SCAM_LEVELS } from '@/lib/scamLevels';
 import TextMessageBubble from '@/components/game/TextMessageBubble';
 import EmailBubble from '@/components/game/EmailBubble';
@@ -54,6 +57,9 @@ export default function SpotTheScam() {
   const { lang } = useLanguage();
   const navigate = useNavigate();
 
+  useSyncTTS();
+  const { speak, stop } = useTTS();
+
   const [levelIndex, setLevelIndex] = useState(0);
   const [phase, setPhase] = useState('question');
   const [attempt, setAttempt] = useState(1);
@@ -75,6 +81,15 @@ export default function SpotTheScam() {
   const isPhoneBoss = !!level.isPhoneBossChallenge;
   // For boss, use current sub-email; for regular, use level directly
   const activeLevel = isBoss ? level.emails[bossEmailIndex] : level;
+
+  // Speak scenario text when question phase loads
+  useEffect(() => {
+    if (phase !== 'question') return;
+    const txt = activeLevel?.scenario?.[lang] || activeLevel?.scenario?.en
+      || activeLevel?.message?.[lang] || activeLevel?.message?.en || '';
+    if (txt) speak(txt, lang);
+    return () => stop();
+  }, [levelIndex, phase, attempt, bossEmailIndex]);
   const sender = activeLevel.sender?.[lang] || activeLevel.sender?.en || '';
   const message = activeLevel.message?.[lang] || activeLevel.message?.en || '';
   const explanation = activeLevel.sageExplanation?.[lang] || activeLevel.sageExplanation?.en || '';
@@ -311,8 +326,11 @@ export default function SpotTheScam() {
           ))}
         </div>
 
-        <div className="flex items-center gap-1 bg-white/10 px-3 py-1.5 rounded-full">
-          <span className="text-gold font-black text-base">⭐ {totalPoints}</span>
+        <div className="flex items-center gap-2">
+          <TTSButton />
+          <div className="flex items-center gap-1 bg-white/10 px-3 py-1.5 rounded-full">
+            <span className="text-gold font-black text-base">⭐ {totalPoints}</span>
+          </div>
         </div>
       </div>
 

@@ -5,6 +5,8 @@ import { ChevronLeft } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { useLanguage } from '@/lib/i18n';
 import LanguageToggle from '@/components/LanguageToggle';
+import { useTTS } from '@/lib/tts';
+import TTSButton from '@/components/TTSButton';
 
 import MeetSage from '@/components/onboarding/MeetSage';
 import ChooseDevice from '@/components/onboarding/ChooseDevice';
@@ -17,6 +19,7 @@ import AvatarSelection from '@/components/onboarding/AvatarSelection';
 export default function Onboarding() {
   const navigate = useNavigate();
   const { lang } = useLanguage();
+  const { setEnabled } = useTTS();
   const [step, setStep] = useState(0);
   const [settings, setSettings] = useState({
     device_type: null,
@@ -79,7 +82,7 @@ export default function Onboarding() {
       key="audio"
       onNext={goNext}
       value={settings.audio_narration}
-      onChange={(v) => updateSetting('audio_narration', v)}
+      onChange={(v) => { updateSetting('audio_narration', v); setEnabled(v); }}
     />,
     <ZeroAds key="ads" onNext={goNext} />,
     <PrivacyPromise key="privacy" onNext={goNext} />,
@@ -117,7 +120,10 @@ export default function Onboarding() {
           ))}
         </div>
 
-        <LanguageToggle className="text-sm px-3 py-1.5" />
+        <div className="flex items-center gap-2">
+          <TTSButton />
+          <LanguageToggle className="text-sm px-3 py-1.5" />
+        </div>
       </div>
 
       {/* Screen content */}
